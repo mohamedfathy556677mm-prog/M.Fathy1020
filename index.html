@@ -20,6 +20,15 @@
             --white: #FFFFFF;
             --border-color: #E0E0E0;
             --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            
+            /* Offer Template Colors */
+            --primary: #1A2536;
+            --primary-light-2: #2C3E50;
+            --accent-2: #FF6B35;
+            --accent-light: #FF8C61;
+            --bg-light: #F4F6F8;
+            --card-shadow: 0 10px 40px rgba(26, 37, 54, 0.1);
+            --radius: 20px;
         }
 
         * {
@@ -37,7 +46,8 @@
             padding: 20px;
         }
 
-        .poster-container {
+        /* Admin Panel Styles */
+        .admin-container {
             width: 720px;
             min-height: 960px;
             background-color: var(--white);
@@ -454,36 +464,763 @@
             to { opacity: 1; transform: translate(-50%, 0); }
         }
 
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            display: none;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Offer Template Styles (Hidden by default) */
+        .offer-template {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            background: var(--white);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border-radius: 0;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 800px) {
+            .offer-template {
+                border-radius: 24px;
+                margin: 40px auto;
+            }
+        }
+        
+        /* Header Design */
+        .offer-header {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+        
+        .offer-header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        
+        .offer-header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(26, 37, 54, 0.4), rgba(26, 37, 54, 0.95));
+            z-index: 1;
+        }
+
+        .brand-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .brand-badge img {
+            height: 40px;
+        }
+
+        .brand-badge span {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .offer-header-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 40px;
+            color: white;
+        }
+        
+        .tag-pill {
+            background: var(--accent-2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.4);
+        }
+
+        .offer-title {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .offer-subtitle {
+            font-size: 20px;
+            font-weight: 500;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        /* Content Wrapper */
+        .offer-content-wrapper {
+            padding: 40px;
+            position: relative;
+        }
+
+        .offer-content-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--white);
+            border-radius: 40px 40px 0 0;
+            z-index: 1;
+        }
+
+        /* Overview Cards */
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .info-card {
+            background: var(--bg-light);
+            padding: 20px 15px;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow);
+            border-color: rgba(255, 107, 53, 0.2);
+        }
+
+        .info-card .material-icons {
+            font-size: 32px;
+            color: var(--accent-2);
+            margin-bottom: 10px;
+            background: rgba(255, 107, 53, 0.1);
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .info-label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        /* Section Styling */
+        .offer-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        .section-icon {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Flight Timeline Design */
+        .flight-card {
+            background: var(--bg-light);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border-right: 5px solid var(--accent-2);
+        }
+
+        .flight-icon-box {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .flight-icon-box .material-icons {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .flight-details {
+            flex: 1;
+        }
+
+        .flight-main-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .flight-route {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-dark);
+        }
+
+        .flight-date {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .flight-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .flight-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Hotels Styling */
+        .hotels-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .hotel-card {
+            display: flex;
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            transition: transform 0.3s;
+        }
+
+        .hotel-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .hotel-image {
+            width: 140px;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .hotel-content {
+            padding: 15px 20px;
+            flex: 1;
+        }
+
+        .hotel-dates {
+            display: inline-block;
+            background: rgba(26, 37, 54, 0.1);
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .hotel-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .hotel-room {
+            font-size: 14px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Car Rental Section */
+        .car-card {
+            background: var(--bg-light);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 15px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .car-header {
+            background: linear-gradient(to right, var(--primary), var(--primary-light-2));
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .car-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .car-table th {
+            text-align: right;
+            padding: 12px 20px;
+            background: #f0f2f5;
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom: 1px solid #e0e0e0;
+            width: 30%;
+        }
+
+        .car-table td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* Transfers Section */
+        .transfers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        .transfers-table thead tr {
+            background: var(--primary);
+            color: white;
+        }
+
+        .transfers-table th {
+            padding: 12px 15px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .transfers-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .transfers-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .transfers-table tbody tr:nth-child(even) {
+            background: #FAFAFA;
+        }
+
+        .trans-icon {
+            color: var(--accent-2);
+            font-weight: bold;
+        }
+
+        /* Timeline Itinerary */
+        .timeline {
+            position: relative;
+            padding-right: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            right: 7px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: #E2E8F0;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            right: -27px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 4px solid var(--accent-2);
+            z-index: 1;
+        }
+
+        .timeline-day-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-content {
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 12px;
+            margin-right: 10px;
+        }
+
+        .activity-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            margin: 0 0 8px 0;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-dark);
+            width: 100%;
+        }
+        
+        .activity-tag i {
+            color: var(--accent-2);
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        /* Cost & Payment */
+        .cost-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #2C3E50 100%);
+            color: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .cost-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            transform: rotate(30deg);
+        }
+
+        .total-label {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .total-amount {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .discount-badge {
+            background: var(--accent-2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Payment Methods Grid */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .payment-item {
+            background: var(--bg-light);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .payment-item i {
+            color: var(--primary);
+        }
+
+        .bank-card {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .bank-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .bank-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .bank-info-label {
+            color: var(--text-light);
+        }
+
+        .bank-info-value {
+            font-weight: 600;
+            font-family: monospace;
+            direction: ltr;
+            text-align: right;
+        }
+
+        /* Policies Section Styling */
+        .policies-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .policy-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .policy-header {
+            background: var(--bg-light);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .policy-header i {
+            color: var(--accent-2);
+        }
+
+        .policy-header h4 {
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .policy-body {
+            padding: 20px;
+        }
+
+        .policy-list {
+            list-style: none;
+        }
+
+        .policy-list li {
+            position: relative;
+            padding-right: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .policy-list li::before {
+            content: "•";
+            color: var(--accent-2);
+            font-weight: bold;
+            font-size: 18px;
+            position: absolute;
+            right: 0;
+            top: -2px;
+        }
+
+        /* Footer */
+        .offer-footer {
+            text-align: center;
+            padding: 30px;
+            background: var(--bg-light);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .footer-logo {
+            margin-bottom: 15px;
+        }
+        
+        .footer-logo img {
+            height: 60px;
+            opacity: 0.9;
+        }
+
+        .terms-list li {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            position: relative;
+            padding-right: 15px;
+        }
+
+        .terms-list li::before {
+            content: '•';
+            position: absolute;
+            right: 0;
+            color: var(--accent-2);
+        }
+
         /* Responsive */
         @media (max-width: 600px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
+            .overview-cards {
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            .header {
+            .title {
+                font-size: 32px;
+            }
+            
+            .flight-card {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 12px;
             }
             
-            .header-actions {
+            .flight-main-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .hotel-card {
+                flex-direction: column;
+            }
+            
+            .hotel-image {
                 width: 100%;
-                justify-content: flex-end;
-            }
-
-            .schedule-table {
-                font-size: 11px;
-            }
-
-            .schedule-table th, .schedule-table td {
-                padding: 8px 4px;
+                height: 180px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="poster-container" id="offer-content">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p style="font-size: 18px; font-weight: 600; color: var(--primary-color);">جاري إنشاء ملف PDF...</p>
+        <p style="font-size: 14px; color: var(--text-light); margin-top: 8px;">قد يستغرق هذا بضع ثوانٍ</p>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-container" id="admin-panel">
         <!-- Header -->
         <div class="header">
             <div class="header-title">
@@ -871,6 +1608,122 @@
                             <textarea class="hotel-notes" rows="2">منتجع صحي يوفر إطلالات رائعة على الجبال</textarea>
                         </div>
                     </div>
+
+                    <!-- Hotel 3 -->
+                    <div class="form-section hotel-section">
+                        <div class="section-title">
+                            <i class="material-icons">hotel</i>
+                            فندق 3: Best Western Premier Batumi
+                        </div>
+                        <div class="image-upload">
+                            <div class="image-preview" id="hotel-3-preview">
+                                <i class="material-icons" style="font-size: 36px;">hotel</i>
+                            </div>
+                            <div class="upload-buttons">
+                                <button class="upload-btn" onclick="document.getElementById('hotel-3-input').click()">
+                                    <i class="material-icons">cloud_upload</i>
+                                    إضافة صورة الفندق
+                                    <input type="file" id="hotel-3-input" accept="image/*" style="display: none;" onchange="previewImage(this, 'hotel-3-preview')">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>اسم الفندق</label>
+                                <input type="text" class="hotel-name" value="Best Western Premier Batumi">
+                            </div>
+                            <div class="form-col">
+                                <label>المدينة</label>
+                                <input type="text" class="hotel-city" value="باتومي">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>تاريخ الإقامة</label>
+                                <input type="text" class="hotel-dates" value="15 - 19 ديسمبر (4 ليالي)">
+                            </div>
+                            <div class="form-col">
+                                <label>نوع الغرفة</label>
+                                <input type="text" class="room-type" value="غرفتين ثنائية">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>الوجبات المرفقة</label>
+                                <input type="text" class="meals" value="فطور فقط">
+                            </div>
+                            <div class="form-col">
+                                <label>تقييم الفندق</label>
+                                <select class="hotel-rating">
+                                    <option value="3">3 نجوم</option>
+                                    <option value="4" selected>4 نجوم</option>
+                                    <option value="5">5 نجوم</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ملاحظات الفندق</label>
+                            <textarea class="hotel-notes" rows="2">فندق فاخر يوفر إطلالات رائعة على البحر</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Hotel 4 -->
+                    <div class="form-section hotel-section">
+                        <div class="section-title">
+                            <i class="material-icons">hotel</i>
+                            فندق 4: Gino Seaside Tbilisi
+                        </div>
+                        <div class="image-upload">
+                            <div class="image-preview" id="hotel-4-preview">
+                                <i class="material-icons" style="font-size: 36px;">hotel</i>
+                            </div>
+                            <div class="upload-buttons">
+                                <button class="upload-btn" onclick="document.getElementById('hotel-4-input').click()">
+                                    <i class="material-icons">cloud_upload</i>
+                                    إضافة صورة الفندق
+                                    <input type="file" id="hotel-4-input" accept="image/*" style="display: none;" onchange="previewImage(this, 'hotel-4-preview')">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>اسم الفندق</label>
+                                <input type="text" class="hotel-name" value="Gino Seaside Tbilisi">
+                            </div>
+                            <div class="form-col">
+                                <label>المدينة</label>
+                                <input type="text" class="hotel-city" value="تيبليسي">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>تاريخ الإقامة</label>
+                                <input type="text" class="hotel-dates" value="19 - 20 ديسمبر (ليلة)">
+                            </div>
+                            <div class="form-col">
+                                <label>نوع الغرفة</label>
+                                <input type="text" class="room-type" value="غرفتين ثنائية">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>الوجبات المرفقة</label>
+                                <input type="text" class="meals" value="فطور فقط">
+                            </div>
+                            <div class="form-col">
+                                <label>تقييم الفندق</label>
+                                <select class="hotel-rating">
+                                    <option value="3">3 نجوم</option>
+                                    <option value="4" selected>4 نجوم</option>
+                                    <option value="5">5 نجوم</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ملاحظات الفندق</label>
+                            <textarea class="hotel-notes" rows="2">فندق 4 نجوم، يقع بالقرب من وسط المدينة القديمة</textarea>
+                        </div>
+                    </div>
                 </div>
 
                 <button class="btn btn-add" id="add-hotel-btn">
@@ -963,6 +1816,23 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="material-icons">looks_4</i>
+                        اليوم العاشر: العودة
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label>النشاط 1</label>
+                            <input type="text" value="تسوق للهدايا التذكارية">
+                        </div>
+                        <div class="form-col">
+                            <label>النشاط 2</label>
+                            <input type="text" value="التوجه للمطار">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Car Tab -->
@@ -983,7 +1853,7 @@
                     <div class="form-row">
                         <div class="form-col">
                             <label>نوع السيارة</label>
-                            <select>
+                            <select id="car-type">
                                 <option value="suv" selected>سيارة دفع رباعي (SUV)</option>
                                 <option value="sedan">سيارة سيدان</option>
                                 <option value="van">حافلة صغيرة</option>
@@ -991,17 +1861,17 @@
                         </div>
                         <div class="form-col">
                             <label>السعة</label>
-                            <input type="text" value="4 ركاب">
+                            <input type="text" id="car-capacity" value="4 ركاب">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-col">
                             <label>موديل السيارة</label>
-                            <input type="text" value="تويوتا راف 4 أو ما يماثلها">
+                            <input type="text" id="car-model" value="تويوتا راف 4 أو ما يماثلها">
                         </div>
                         <div class="form-col">
                             <label>ناقل الحركة</label>
-                            <select>
+                            <select id="car-transmission">
                                 <option value="auto" selected>أوتوماتيك</option>
                                 <option value="manual">يدوي</option>
                             </select>
@@ -1010,16 +1880,16 @@
                     <div class="form-row">
                         <div class="form-col">
                             <label>موقع الاستلام</label>
-                            <input type="text" value="مطار تيبليسي الدولي">
+                            <input type="text" id="car-pickup" value="مطار تيبليسي الدولي">
                         </div>
                         <div class="form-col">
                             <label>موقع التسليم</label>
-                            <input type="text" value="مطار تيبليسي الدولي">
+                            <input type="text" id="car-dropoff" value="مطار تيبليسي الدولي">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>المشمولات</label>
-                        <input type="text" value="تأمين شامل، كيلومترات مفتوحة، ضريبة القيمة المضافة">
+                        <input type="text" id="car-inclusions" value="تأمين شامل، كيلومترات مفتوحة، ضريبة القيمة المضافة">
                     </div>
                 </div>
             </div>
@@ -1102,21 +1972,21 @@
                     <div class="form-row">
                         <div class="form-col">
                             <label>سعر الشخص الواحد</label>
-                            <input type="number" value="3916.25">
+                            <input type="number" id="price-per-person" value="3916.25">
                         </div>
                         <div class="form-col">
                             <label>عدد الأفراد</label>
-                            <input type="number" value="4">
+                            <input type="number" id="total-people" value="4">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-col">
                             <label>التكلفة الإجمالية</label>
-                            <input type="number" value="15665" style="font-weight: bold; color: var(--primary-color);">
+                            <input type="number" id="total-cost" value="15665" style="font-weight: bold; color: var(--primary-color);">
                         </div>
                         <div class="form-col">
                             <label>العملة</label>
-                            <select>
+                            <select id="currency">
                                 <option value="sar" selected>ريال سعودي</option>
                                 <option value="usd">دولار أمريكي</option>
                             </select>
@@ -1124,7 +1994,15 @@
                     </div>
                     <div class="form-group">
                         <label>ملاحظات التسعير</label>
-                        <input type="text" value="شامل خصم اليوم الوطني والتعامل الأول">
+                        <input type="text" id="pricing-notes" value="شامل خصم اليوم الوطني والتعامل الأول">
+                    </div>
+                    <div class="form-group">
+                        <label>اسم منسق العرض</label>
+                        <input type="text" id="coordinator-name" value="جمال">
+                    </div>
+                    <div class="form-group">
+                        <label>المسمى الوظيفي</label>
+                        <input type="text" id="coordinator-title" value="استشاري قسم الحجوزات">
                     </div>
                 </div>
 
@@ -1135,21 +2013,31 @@
                     </div>
                     <div class="form-group">
                         <label>طرق الدفع الإلكتروني</label>
-                        <input type="text" value="فيزا، ماستر كارد، مدى، تابي، تمارا">
+                        <input type="text" id="payment-methods" value="فيزا، ماستر كارد، مدى، تابي، تمارا">
                     </div>
                     <div class="form-row">
                         <div class="form-col">
                             <label>بنك الراجحي</label>
-                            <input type="text" value="SA5680000587608010452853">
+                            <input type="text" id="bank-rajhi" value="SA5680000587608010452853">
                         </div>
                         <div class="form-col">
                             <label>البنك الأهلي</label>
-                            <input type="text" value="SA2910000001400019666903">
+                            <input type="text" id="bank-ahly" value="SA2910000001400019666903">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label>بنك البلاد</label>
+                            <input type="text" id="bank-albilad" value="SA9115000722140112730002">
+                        </div>
+                        <div class="form-col">
+                            <label>بنك SAB</label>
+                            <input type="text" id="bank-sab" value="SA0645000000262342454001">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>اسم المستفيد</label>
-                        <input type="text" value="بوابات العالم للسفر والسياحة">
+                        <input type="text" id="beneficiary-name" value="بوابات العالم للسفر والسياحة">
                     </div>
                 </div>
 
@@ -1169,6 +2057,345 @@
         <div class="footer">
             <div>مولد عروض السياحة - الإصدار 1.0</div>
             <div>بوابات العالم للسفر والسياحة © 2024</div>
+        </div>
+    </div>
+
+    <!-- Offer Template (Hidden by default) -->
+    <div class="offer-template" id="offer-template">
+        <!-- Header -->
+        <div class="offer-header">
+            <img src="https://sfile.chatglm.cn/images-ppt/5a9413eb21e0.jpg" alt="Georgia Landscape" class="offer-header-bg" id="offer-header-bg">
+            <div class="offer-header-overlay"></div>
+            
+            <div class="brand-badge">
+                <img src="https://z-cdn-media.chatglm.cn/files/3117603b-7600-4b99-ba4a-a3739efbbff8.png?auth_key=1871525828-1c1cc756e0f840cdb811fe1ea9a7a32e-0-3f5d63ad396f854048a8dccab77a7e92" alt="World Gates Logo">
+                <span>بوابات العالم للسفر والسياحة</span>
+            </div>
+            
+            <div class="offer-header-content">
+                <div class="tag-pill">رحلة مميزة</div>
+                <h1 class="offer-title" id="offer-title">برنامج خاص لاستاذ بن غازي</h1>
+                <h2 class="offer-subtitle" id="offer-destination">جورجيا - تيبليسي – باكورياني - كوتايسي – باتومي</h2>
+            </div>
+        </div>
+        
+        <div class="offer-content-wrapper">
+            <!-- Overview Cards -->
+            <div class="overview-cards">
+                <div class="info-card">
+                    <i class="material-icons">calendar_today</i>
+                    <span class="info-label">تاريخ السفر</span>
+                    <span class="info-value" id="offer-travel-date">11 - 20 ديسمبر</span>
+                </div>
+                <div class="info-card">
+                    <i class="material-icons">bed</i>
+                    <span class="info-label">مدة الإقامة</span>
+                    <span class="info-value" id="offer-nights">9 ليالي</span>
+                </div>
+                <div class="info-card">
+                    <i class="material-icons">group</i>
+                    <span class="info-label">عدد الأفراد</span>
+                    <span class="info-value" id="offer-people">4 أشخاص</span>
+                </div>
+                <div class="info-card">
+                    <i class="material-icons">stars</i>
+                    <span class="info-label">نوع البرنامج</span>
+                    <span class="info-value" id="offer-program-type">برنامج خاص</span>
+                </div>
+            </div>
+
+            <!-- Flight Section -->
+            <div class="offer-section" id="offer-flight-section">
+                <div class="section-header">
+                    <div class="section-icon"><i class="material-icons">flight_takeoff</i></div>
+                    <h3 class="section-title">تفاصيل الطيران</h3>
+                </div>
+                <div id="offer-flights-container">
+                    <!-- Flight cards will be generated dynamically -->
+                </div>
+            </div>
+
+            <!-- Hotels Section -->
+            <div class="offer-section" id="offer-hotels-section">
+                <div class="section-header">
+                    <div class="section-icon"><i class="material-icons">hotel</i></div>
+                    <h3 class="section-title">الإقامة الفندقية</h3>
+                </div>
+                
+                <div class="hotels-grid" id="offer-hotels-container">
+                    <!-- Hotel cards will be generated dynamically -->
+                </div>
+            </div>
+
+            <!-- Car Rental Section -->
+            <div class="offer-section" id="offer-car-section">
+                <div class="section-header">
+                    <div class="section-icon"><i class="material-icons">directions_car</i></div>
+                    <h3 class="section-title">استئجار السيارة</h3>
+                </div>
+                
+                <div class="car-card">
+                    <div class="car-header">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <i class="material-icons">time_to_leave</i>
+                            <span style="font-weight:700; font-size:18px;">تفاصيل السيارة</span>
+                        </div>
+                        <span style="background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:20px; font-size:12px;" id="offer-car-duration">مدة الإيجار: 9 أيام</span>
+                    </div>
+                    <table class="car-table">
+                        <tr>
+                            <th>نوع السيارة</th>
+                            <td id="offer-car-type">سيارة دفع رباعي (SUV) أو سيدان - 4 ركاب</td>
+                        </tr>
+                        <tr>
+                            <th>موديل السيارة</th>
+                            <td id="offer-car-model">[مثال: تويوتا راف 4 أو ما يماثلها]</td>
+                        </tr>
+                        <tr>
+                            <th>استلام السيارة</th>
+                            <td id="offer-car-pickup">مطار تيبليسي الدولي</td>
+                        </tr>
+                        <tr>
+                            <th>تسليم السيارة</th>
+                            <td id="offer-car-dropoff">مطار تيبليسي الدولي</td>
+                        </tr>
+                        <tr>
+                            <th>المشمولات</th>
+                            <td id="offer-car-inclusions">تأمين شامل، كيلومترات مفتوحة، ضريبة القيمة المضافة</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transfers Section -->
+            <div class="offer-section" id="offer-transfers-section">
+                <div class="section-header">
+                    <div class="section-icon"><i class="material-icons">commute</i></div>
+                    <h3 class="section-title">التنقلات</h3>
+                </div>
+
+                <table class="transfers-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%">المسار</th>
+                            <th style="width: 30%">وسيلة النقل</th>
+                            <th style="width: 20%">التاريخ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="offer-transfers-body">
+                        <!-- Transfers will be generated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Itinerary Section -->
+            <div class="offer-section" id="offer-itinerary-section">
+                <div class="section-header">
+                    <div class="section-icon"><i class="material-icons">map</i></div>
+                    <h3 class="section-title">البرنامج السياحي</h3>
+                </div>
+                
+                <div class="timeline" id="offer-itinerary-container">
+                    <!-- Timeline items will be generated dynamically -->
+                </div>
+            </div>
+
+            <!-- Cost Section -->
+            <div class="offer-section" id="offer-cost-section">
+                <div class="cost-card">
+                    <div class="total-label">التكلفة الإجمالية للرحلة</div>
+                    <div class="total-amount" id="offer-total-cost">15,665 ريال</div>
+                    <div class="discount-badge" id="offer-pricing-notes">شامل خصم اليوم الوطني والتعامل الأول</div>
+                </div>
+                <div style="text-align: center; color: var(--text-light); font-size: 14px;">
+                    منسق العرض: <strong style="color: var(--primary);" id="offer-coordinator">جمال</strong>، <span id="offer-coordinator-title">استشاري قسم الحجوزات</span>
+                </div>
+            </div>
+
+            <!-- Includes/Excludes -->
+            <div class="offer-section" id="offer-includes-section">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: rgba(26, 37, 54, 0.05); padding: 20px; border-radius: 16px;">
+                        <h4 style="color: var(--primary); margin-bottom: 15px; display:flex; align-items:center; gap:8px;">
+                            <i class="material-icons">check_circle</i> الباقة تشمل
+                        </h4>
+                        <ul style="list-style:none; font-size:13px; color:var(--text-dark);">
+                            <li style="margin-bottom:8px; display:flex; gap:8px;"><i class="material-icons" style="font-size:14px; color:var(--primary);">check</i> الطيران الدولي</li>
+                            <li style="margin-bottom:8px; display:flex; gap:8px;"><i class="material-icons" style="font-size:14px; color:var(--primary);">check</i> الاستقبال والتوديع</li>
+                            <li style="margin-bottom:8px; display:flex; gap:8px;"><i class="material-icons" style="font-size:14px; color:var(--primary);">check</i> التنقلات بسيارة خاصة</li>
+                            <li style="margin-bottom:8px; display:flex; gap:8px;"><i class="material-icons" style="font-size:14px; color:var(--primary);">check</i> إقامة 9 ليالي مع الفطور</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(255, 107, 53, 0.05); padding: 20px; border-radius: 16px;">
+                        <h4 style="color: var(--accent-2); margin-bottom: 15px; display:flex; align-items:center; gap:8px;">
+                            <i class="material-icons">cancel</i> الباقة لا تشمل
+                        </h4>
+                        <ul style="list-style:none; font-size:13px; color:var(--text-dark);">
+                            <li style="margin-bottom:8px; display:flex; gap:8px;"><i class="material-icons" style="font-size:14px; color:var(--accent-2);">close</i> الغداء والعشاء</li>
+                            <li style="margin-bottom:8px; display:flex; gap:8px;"><i class="material-icons" style="font-size:14px; color:var(--accent-2);">close</i> تذاكر الأماكن السياحية</li>
+                            <li style="margin-bottom:8px; display:flex; gap:8px;"><i class="material-icons" style="font-size:14px; color:var(--accent-2);">close</i> الأنشطة الاختيارية</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Policies Section -->
+            <div class="offer-section" id="offer-policies-section">
+                <div class="section-header">
+                    <div class="section-icon"><i class="material-icons">gavel</i></div>
+                    <h3 class="section-title">سياسات وملاحظات هامة</h3>
+                </div>
+
+                <div class="policies-grid">
+                    <!-- Hotels Policy -->
+                    <div class="policy-card">
+                        <div class="policy-header">
+                            <i class="material-icons">hotel</i>
+                            <h4>الفنادق</h4>
+                        </div>
+                        <div class="policy-body">
+                            <ul class="policy-list">
+                                <li>وقت الدخول للفنادق يكون بين الساعة 2:00 إلى 3:00 عصرًا، ووقت الخروج الساعة 12:00 ظهرًا.</li>
+                                <li>الليلة الإضافية (Late check-out أو Early check-in) يمكن طلبها مقابل رسوم إضافية حسب سياسة الفندق والتوافر.</li>
+                                <li>الغرف مزدوجة أو منفصلة (Twin/Double) بحسب التوافر، وسيتم تأكيد النوع المتاح عند الحجز.</li>
+                                <li>الغرف المتصلة (Connecting Rooms) ليست مضمونة وتعتمد على توافر الفندق عند الوصول.</li>
+                                <li>الفنادق غير ملزمة بتوفير غرف متجاورة أو متصلة ما لم يتم التأكيد مسبقًا من قبلهم.</li>
+                                <li>سياسة الإلغاء أو الاسترداد تخضع لأنظمة كل فندق، وتختلف بحسب فترة الحجز ونوع الغرفة.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Flights Policy -->
+                    <div class="policy-card">
+                        <div class="policy-header">
+                            <i class="material-icons">flight</i>
+                            <h4>الطيران</h4>
+                        </div>
+                        <div class="policy-body">
+                            <ul class="policy-list">
+                                <li>تشمل الباقة تذاكر الطيران (حسب التفاصيل المحددة في العرض).</li>
+                                <li>لا يمكن إلغاء أو تعديل التذاكر بعد تأكيدها نهائيًا، وذلك حسب سياسة شركة الطيران.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Weight Policy -->
+                    <div class="policy-card">
+                        <div class="policy-header">
+                            <i class="material-icons">luggage</i>
+                            <h4>الوزن المسموح به</h4>
+                        </div>
+                        <div class="policy-body">
+                            <ul class="policy-list">
+                                <li>الوزن المسموح به على الرحلات الداخلية: 20 كجم لكل شخص.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Attendance Policy -->
+                    <div class="policy-card">
+                        <div class="policy-header">
+                            <i class="material-icons">schedule</i>
+                            <h4>مواعيد الحضور إلى المطار</h4>
+                        </div>
+                        <div class="policy-body">
+                            <ul class="policy-list">
+                                <li>يرجى الحضور إلى المطار قبل 3 ساعات من موعد الرحلات الخارجية.</li>
+                                <li>يرجى الحضور إلى المطار قبل ساعتين من موعد الرحلات الداخلية.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="offer-section" id="offer-payment-section">
+                <div class="section-header">
+                    <div class="section-icon"><i class="material-icons">account_balance_wallet</i></div>
+                    <h3 class="section-title">طرق الدفع والحسابات البنكية</h3>
+                </div>
+
+                <div class="payment-grid" id="offer-payment-methods">
+                    <div class="payment-item"><i class="material-icons">payment</i> فيزا</div>
+                    <div class="payment-item"><i class="material-icons">credit_card</i> ماستر كارد</div>
+                    <div class="payment-item"><i class="material-icons">account_balance</i> مدى</div>
+                    <div class="payment-item"><i class="material-icons">payment</i> تابي / تمارا</div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <div class="bank-card">
+                        <div class="bank-header"><i class="material-icons" style="margin-left:8px;">account_balance</i> بنك الراجحي</div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">رقم الحساب</span>
+                            <span class="bank-info-value" id="offer-bank-rajhi-account">5876080452853</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">الآيبان</span>
+                            <span class="bank-info-value" id="offer-bank-rajhi-iban">SA5680000587608010452853</span>
+                        </div>
+                    </div>
+
+                    <div class="bank-card">
+                        <div class="bank-header"><i class="material-icons" style="margin-left:8px;">account_balance</i> البنك الأهلي (SNB)</div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">رقم الحساب</span>
+                            <span class="bank-info-value" id="offer-bank-ahly-account">01400019666903</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">الآيبان</span>
+                            <span class="bank-info-value" id="offer-bank-ahly-iban">SA2910000001400019666903</span>
+                        </div>
+                    </div>
+
+                    <div class="bank-card">
+                        <div class="bank-header"><i class="material-icons" style="margin-left:8px;">account_balance</i> بنك البلاد</div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">رقم الحساب</span>
+                            <span class="bank-info-value" id="offer-bank-albilad-account">722140112730002</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">الآيبان</span>
+                            <span class="bank-info-value" id="offer-bank-albilad-iban">SA9115000722140112730002</span>
+                        </div>
+                    </div>
+
+                    <div class="bank-card">
+                        <div class="bank-header"><i class="material-icons" style="margin-left:8px;">account_balance</i> بنك SAB</div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">رقم الحساب</span>
+                            <span class="bank-info-value" id="offer-bank-sab-account">262342454001</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">الآيبان</span>
+                            <span class="bank-info-value" id="offer-bank-sab-iban">SA0645000000262342454001</span>
+                        </div>
+                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee; font-size: 13px; color: var(--primary); font-weight: 600;">
+                            المستفيد: <span id="offer-beneficiary">بوابات العالم للسفر والسياحة</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- General Terms -->
+            <div class="offer-section" id="offer-terms-section" style="background: #FFF5F5; padding: 20px; border-radius: 16px; border-right: 4px solid var(--accent-2);">
+                <h4 style="color: #C53030; margin-bottom: 10px; display:flex; align-items:center; gap:8px;">
+                    <i class="material-icons">warning</i> تنبيه هام - الشروط العامة
+                </h4>
+                <ul class="terms-list" style="padding-right: 0; list-style: none;">
+                    <li>الحجز غير قابل للإلغاء أو التعديل (المبلغ بالكامل غير مسترد)</li>
+                    <li>الشركة غير مسئولة عن تصاريح السفر وتأشيرات الخروج والعودة</li>
+                    <li>قد تتغير الأسعار والإمكانية وفقًا لتاريخ السفر المطلوب</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="offer-footer">
+            <div class="footer-logo">
+                <img src="https://z-cdn-media.chatglm.cn/files/3117603b-7600-4b99-ba4a-a3739efbbff8.png?auth_key=1871525828-1c1cc756e0f840cdb811fe1ea9a7a32e-0-3f5d63ad396f854048a8dccab77a7e92" alt="World Gates">
+            </div>
+            <p>بوابات العالم للسفر والسياحة</p>
+            <p style="font-size: 12px; color: #999;">World Gates For Travel & Tourism</p>
         </div>
     </div>
 
@@ -1216,7 +2443,7 @@
         }
 
         // Add new hotel functionality
-        let hotelCount = 2;
+        let hotelCount = 4;
         document.getElementById('add-hotel-btn').addEventListener('click', function() {
             hotelCount++;
             const hotelsContainer = document.getElementById('hotels-container');
@@ -1353,8 +2580,282 @@
             newFlightSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
+        // Function to populate the offer template with data from the admin panel
+        function populateOfferTemplate() {
+            // Basic info
+            const clientName = document.getElementById('client-name').value;
+            const destination = document.getElementById('destination').value;
+            const cities = document.getElementById('cities').value;
+            const travelDate = document.getElementById('travel-date').value;
+            const nightsCount = document.getElementById('nights-count').value;
+            const adultsCount = document.getElementById('adults-count').value;
+            const childrenCount = document.getElementById('children-count').value;
+            const programLevel = document.getElementById('program-level').value;
+            
+            // Set title and destination
+            document.getElementById('offer-title').textContent = `برنامج خاص ل${clientName}`;
+            document.getElementById('offer-destination').textContent = `${destination} - ${cities}`;
+            
+            // Set overview cards
+            document.getElementById('offer-travel-date').textContent = travelDate;
+            document.getElementById('offer-nights').textContent = `${nightsCount} ليالي`;
+            document.getElementById('offer-people').textContent = `${parseInt(adultsCount) + parseInt(childrenCount)} أشخاص`;
+            
+            // Set program type
+            let programType = 'برنامج سياحي';
+            if (programLevel === 'special') programType = 'برنامج خاص VIP';
+            else if (programLevel === 'premium') programType = 'برنامج متميز';
+            else if (programLevel === 'economy') programType = 'برنامج اقتصادي';
+            document.getElementById('offer-program-type').textContent = programType;
+            
+            // Populate flights
+            const flightsContainer = document.getElementById('offer-flights-container');
+            flightsContainer.innerHTML = '';
+            
+            document.querySelectorAll('.flight-section').forEach((section, index) => {
+                const from = section.querySelector('.flight-from').value;
+                const to = section.querySelector('.flight-to').value;
+                const date = section.querySelector('.flight-date').value;
+                const airline = section.querySelector('.airline').value;
+                const departureTime = section.querySelector('.departure-time').value;
+                const arrivalTime = section.querySelector('.arrival-time').value;
+                const notes = section.querySelector('.flight-notes').value;
+                
+                const iconType = index === 0 ? 'flight_takeoff' : 'flight_land';
+                
+                const flightCard = document.createElement('div');
+                flightCard.className = 'flight-card';
+                flightCard.innerHTML = `
+                    <div class="flight-icon-box">
+                        <i class="material-icons">${iconType}</i>
+                    </div>
+                    <div class="flight-details">
+                        <div class="flight-main-info">
+                            <div class="flight-route">${from} ← ${to}</div>
+                            <div class="flight-date">${date}</div>
+                        </div>
+                        <div class="flight-meta">
+                            <span><i class="material-icons" style="font-size:16px">business</i> ${airline}</span>
+                            <span><i class="material-icons" style="font-size:16px">schedule</i> ${departureTime} - ${arrivalTime}</span>
+                            <span><i class="material-icons" style="font-size:16px">swap_horiz</i> ${notes}</span>
+                        </div>
+                    </div>
+                `;
+                
+                flightsContainer.appendChild(flightCard);
+            });
+            
+            // Populate hotels
+            const hotelsContainer = document.getElementById('offer-hotels-container');
+            hotelsContainer.innerHTML = '';
+            
+            document.querySelectorAll('.hotel-section').forEach((section, index) => {
+                const name = section.querySelector('.hotel-name').value;
+                const city = section.querySelector('.hotel-city').value;
+                const dates = section.querySelector('.hotel-dates').value;
+                const roomType = section.querySelector('.room-type').value;
+                const meals = section.querySelector('.meals').value;
+                
+                // Use default images if no image is uploaded
+                const defaultImages = [
+                    'https://sfile.chatglm.cn/images-ppt/6c050ef476fb.jpg',
+                    'https://sfile.chatglm.cn/images-ppt/bc58b70cdd39.jpg',
+                    'https://sfile.chatglm.cn/images-ppt/d163b7a42c08.jpg',
+                    'https://sfile.chatglm.cn/images-ppt/6c050ef476fb.jpg'
+                ];
+                const imageUrl = defaultImages[index % defaultImages.length];
+                
+                const hotelCard = document.createElement('div');
+                hotelCard.className = 'hotel-card';
+                hotelCard.innerHTML = `
+                    <img src="${imageUrl}" alt="Hotel" class="hotel-image">
+                    <div class="hotel-content">
+                        <div class="hotel-dates">${dates}</div>
+                        <div class="hotel-name">${name}</div>
+                        <div class="hotel-room">
+                            <i class="material-icons" style="font-size:16px">king_bed</i> ${roomType}
+                        </div>
+                    </div>
+                `;
+                
+                hotelsContainer.appendChild(hotelCard);
+            });
+            
+            // Populate car rental
+            const carType = document.getElementById('car-type');
+            const carTypeText = carType.options[carType.selectedIndex].text;
+            document.getElementById('offer-car-type').textContent = carTypeText;
+            document.getElementById('offer-car-capacity').textContent = document.getElementById('car-capacity').value;
+            document.getElementById('offer-car-model').textContent = document.getElementById('car-model').value;
+            document.getElementById('offer-car-pickup').textContent = document.getElementById('car-pickup').value;
+            document.getElementById('offer-car-dropoff').textContent = document.getElementById('car-dropoff').value;
+            document.getElementById('offer-car-inclusions').textContent = document.getElementById('car-inclusions').value;
+            document.getElementById('offer-car-duration').textContent = `مدة الإيجار: ${nightsCount} أيام`;
+            
+            // Populate transfers
+            const transfersBody = document.getElementById('offer-transfers-body');
+            transfersBody.innerHTML = '';
+            
+            document.querySelectorAll('.schedule-table tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 4) {
+                    const date = cells[0].textContent;
+                    const from = cells[1].textContent;
+                    const to = cells[2].textContent;
+                    const transport = cells[3].textContent;
+                    
+                    const transferRow = document.createElement('tr');
+                    transferRow.innerHTML = `
+                        <td>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <span class="trans-icon">من:</span> ${from}
+                                <i class="material-icons" style="font-size:14px; color:var(--text-muted)">arrow_back</i>
+                                <span class="trans-icon">إلى:</span> ${to}
+                            </div>
+                        </td>
+                        <td>${transport}</td>
+                        <td>${date}</td>
+                    `;
+                    
+                    transfersBody.appendChild(transferRow);
+                }
+            });
+            
+            // Populate itinerary
+            const itineraryContainer = document.getElementById('offer-itinerary-container');
+            itineraryContainer.innerHTML = '';
+            
+            // Get all program sections
+            const programSections = document.querySelectorAll('#program .form-section');
+            const dayIcons = ['location_on', 'location_on', 'location_on', 'flight_land'];
+            
+            programSections.forEach((section, index) => {
+                const sectionTitle = section.querySelector('.section-title').textContent;
+                const activities = [];
+                
+                // Get all activity inputs
+                const activityInputs = section.querySelectorAll('input[type="text"]');
+                activityInputs.forEach(input => {
+                    if (input.value.trim()) {
+                        activities.push(input.value.trim());
+                    }
+                });
+                
+                // Get notes if available
+                const notesTextarea = section.querySelector('textarea');
+                let notes = '';
+                if (notesTextarea && notesTextarea.value.trim()) {
+                    notes = notesTextarea.value.trim();
+                }
+                
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                
+                let activitiesHTML = '';
+                activities.forEach(activity => {
+                    activitiesHTML += `<div class="activity-tag"><i class="material-icons">directions_car</i> ${activity}</div>`;
+                });
+                
+                if (notes) {
+                    activitiesHTML += `<div class="activity-tag"><i class="material-icons">info</i> ${notes}</div>`;
+                }
+                
+                timelineItem.innerHTML = `
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-day-title">
+                        <i class="material-icons" style="color:var(--accent-2)">${dayIcons[index % dayIcons.length]}</i>
+                        ${sectionTitle}
+                    </div>
+                    <div class="timeline-content">
+                        ${activitiesHTML}
+                    </div>
+                `;
+                
+                itineraryContainer.appendChild(timelineItem);
+            });
+            
+            // Populate cost
+            const totalCost = document.getElementById('total-cost').value;
+            const currency = document.getElementById('currency');
+            const currencyText = currency.options[currency.selectedIndex].text;
+            const pricingNotes = document.getElementById('pricing-notes').value;
+            
+            document.getElementById('offer-total-cost').textContent = `${totalCost} ${currencyText.split(' ')[0]}`;
+            document.getElementById('offer-pricing-notes').textContent = pricingNotes;
+            
+            // Populate coordinator info
+            const coordinatorName = document.getElementById('coordinator-name').value;
+            const coordinatorTitle = document.getElementById('coordinator-title').value;
+            document.getElementById('offer-coordinator').textContent = coordinatorName;
+            document.getElementById('offer-coordinator-title').textContent = coordinatorTitle;
+            
+            // Populate payment methods
+            const paymentMethods = document.getElementById('payment-methods').value;
+            const paymentMethodsArray = paymentMethods.split('،');
+            const paymentMethodsContainer = document.getElementById('offer-payment-methods');
+            paymentMethodsContainer.innerHTML = '';
+            
+            const paymentIcons = {
+                'فيزا': 'payment',
+                'ماستر كارد': 'credit_card',
+                'مدى': 'account_balance',
+                'تابي': 'payment',
+                'تمارا': 'payment'
+            };
+            
+            paymentMethodsArray.forEach(method => {
+                const methodTrimmed = method.trim();
+                const icon = paymentIcons[methodTrimmed] || 'payment';
+                
+                const paymentItem = document.createElement('div');
+                paymentItem.className = 'payment-item';
+                paymentItem.innerHTML = `<i class="material-icons">${icon}</i> ${methodTrimmed}`;
+                
+                paymentMethodsContainer.appendChild(paymentItem);
+            });
+            
+            // Populate bank accounts
+            document.getElementById('offer-bank-rajhi-iban').textContent = document.getElementById('bank-rajhi').value;
+            document.getElementById('offer-bank-ahly-iban').textContent = document.getElementById('bank-ahly').value;
+            document.getElementById('offer-bank-albilad-iban').textContent = document.getElementById('bank-albilad').value;
+            document.getElementById('offer-bank-sab-iban').textContent = document.getElementById('bank-sab').value;
+            document.getElementById('offer-beneficiary').textContent = document.getElementById('beneficiary-name').value;
+            
+            // Update main image if uploaded
+            const mainImagePreview = document.getElementById('main-image-preview');
+            const mainImage = mainImagePreview.querySelector('img');
+            if (mainImage) {
+                document.getElementById('offer-header-bg').src = mainImage.src;
+            }
+            
+            // Show/hide sections based on toggles
+            document.getElementById('offer-flight-section').style.display = 
+                document.getElementById('flight-toggle').checked ? 'block' : 'none';
+            document.getElementById('offer-hotels-section').style.display = 
+                document.getElementById('hotels-toggle').checked ? 'block' : 'none';
+            document.getElementById('offer-car-section').style.display = 
+                document.getElementById('car-toggle').checked ? 'block' : 'none';
+            document.getElementById('offer-transfers-section').style.display = 
+                document.getElementById('transport-toggle').checked ? 'block' : 'none';
+            document.getElementById('offer-itinerary-section').style.display = 
+                document.getElementById('program-toggle').checked ? 'block' : 'none';
+            document.getElementById('offer-cost-section').style.display = 
+                document.getElementById('package-toggle').checked ? 'block' : 'none';
+            document.getElementById('offer-includes-section').style.display = 
+                document.getElementById('package-toggle').checked ? 'block' : 'none';
+            document.getElementById('offer-policies-section').style.display = 
+                document.getElementById('package-toggle').checked ? 'block' : 'none';
+            document.getElementById('offer-payment-section').style.display = 
+                document.getElementById('package-toggle').checked ? 'block' : 'none';
+            document.getElementById('offer-terms-section').style.display = 
+                document.getElementById('package-toggle').checked ? 'block' : 'none';
+        }
+
         // Save record functionality
         document.getElementById('save-record-btn').addEventListener('click', function() {
+            // Populate the offer template with current data
+            populateOfferTemplate();
+            
             // Gather all form data
             const formData = {
                 clientName: document.getElementById('client-name').value,
@@ -1448,23 +2949,44 @@
 
         // Download offer as PDF functionality
         document.getElementById('download-offer-btn').addEventListener('click', async function() {
-            const { jsPDF } = window.jspdf;
-            
-            // Show loading state
-            this.innerHTML = '<i class="material-icons">hourglass_empty</i> جاري التحميل...';
-            this.disabled = true;
-            
             try {
+                // Check if libraries are loaded
+                if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+                    throw new Error('المكتبات اللازمة لم يتم تحميلها بشكل صحيح');
+                }
+                
+                // Populate the offer template with current data
+                populateOfferTemplate();
+                
+                // Show loading overlay
+                const loadingOverlay = document.getElementById('loading-overlay');
+                loadingOverlay.style.display = 'flex';
+                
+                // Show the offer template temporarily
+                const offerTemplate = document.getElementById('offer-template');
+                const adminPanel = document.getElementById('admin-panel');
+                
+                // Hide admin panel and show offer template
+                adminPanel.style.display = 'none';
+                offerTemplate.style.display = 'block';
+                
+                // Wait for the template to render
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const { jsPDF } = window.jspdf;
+                
                 // Create a temporary container for PDF generation
-                const element = document.getElementById('offer-content');
+                const element = document.getElementById('offer-template');
                 
                 // Use html2canvas to capture the element
                 const canvas = await html2canvas(element, {
                     scale: 2, // Higher scale for better quality
                     useCORS: true,
                     logging: false,
-                    windowWidth: element.scrollWidth,
-                    windowHeight: element.scrollHeight
+                    windowWidth: 800, // Fixed width for better rendering
+                    windowHeight: element.scrollHeight,
+                    scrollX: 0,
+                    scrollY: 0
                 });
                 
                 // Calculate dimensions
@@ -1502,17 +3024,24 @@
                 
                 // Show error message
                 const toast = document.getElementById('toast');
-                toast.textContent = 'حدث خطأ أثناء تحميل العرض';
+                toast.textContent = `حدث خطأ: ${error.message}`;
                 toast.style.display = 'block';
                 
-                // Hide toast after 3 seconds
+                // Hide toast after 5 seconds
                 setTimeout(() => {
                     toast.style.display = 'none';
-                }, 3000);
+                }, 5000);
             } finally {
                 // Reset button state
                 this.innerHTML = '<i class="material-icons">download</i> تحميل العرض';
                 this.disabled = false;
+                
+                // Show admin panel and hide offer template
+                document.getElementById('admin-panel').style.display = 'flex';
+                document.getElementById('offer-template').style.display = 'none';
+                
+                // Hide loading overlay
+                document.getElementById('loading-overlay').style.display = 'none';
             }
         });
     </script>
