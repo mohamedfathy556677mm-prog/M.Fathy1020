@@ -6,6 +6,8 @@
     <title>مولد عروض السياحة - لوحة التحكم</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --primary-color: #1E88E5;
@@ -91,9 +93,27 @@
             color: var(--white);
         }
 
+        .btn-primary:hover {
+            background-color: #E65100;
+        }
+
         .btn-secondary {
             background-color: rgba(255,255,255,0.2);
             color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        .btn-add {
+            background-color: var(--primary-color);
+            color: var(--white);
+            margin-top: 10px;
+        }
+
+        .btn-add:hover {
+            background-color: var(--secondary-color);
         }
 
         /* Tabs */
@@ -235,6 +255,14 @@
             color: var(--text-light);
             font-size: 12px;
             border: 2px dashed var(--border-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .upload-buttons {
@@ -405,6 +433,27 @@
             font-size: 11px;
         }
 
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translate(-50%, 20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
         /* Responsive */
         @media (max-width: 600px) {
             .form-row {
@@ -434,7 +483,7 @@
     </style>
 </head>
 <body>
-    <div class="poster-container">
+    <div class="poster-container" id="offer-content">
         <!-- Header -->
         <div class="header">
             <div class="header-title">
@@ -442,11 +491,11 @@
                 <p>شركة بوابات العالم للسفر والسياحة | تحكم كامل في العروض</p>
             </div>
             <div class="header-actions">
-                <button class="btn btn-secondary">
+                <button class="btn btn-secondary" id="save-record-btn">
                     <i class="material-icons">save</i>
                     حفظ السجل
                 </button>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" id="download-offer-btn">
                     <i class="material-icons">download</i>
                     تحميل العرض
                 </button>
@@ -497,13 +546,14 @@
                         صورة العرض الرئيسية
                     </div>
                     <div class="image-upload">
-                        <div class="image-preview">
+                        <div class="image-preview" id="main-image-preview">
                             <i class="material-icons" style="font-size: 36px;">add_photo_alternate</i>
                         </div>
                         <div class="upload-buttons">
-                            <button class="upload-btn">
+                            <button class="upload-btn" onclick="document.getElementById('main-image-input').click()">
                                 <i class="material-icons">cloud_upload</i>
                                 رفع صورة جديدة
+                                <input type="file" id="main-image-input" accept="image/*" style="display: none;" onchange="previewImage(this, 'main-image-preview')">
                             </button>
                             <button class="upload-btn">
                                 <i class="material-icons">image</i>
@@ -521,46 +571,46 @@
                     <div class="form-row">
                         <div class="form-col">
                             <label>اسم العميل</label>
-                            <input type="text" value="الأستاذ بن غازي">
+                            <input type="text" id="client-name" value="الأستاذ بن غازي">
                         </div>
                         <div class="form-col">
                             <label>رقم الجوال</label>
-                            <input type="text" value="+966 5X XXX XXXX">
+                            <input type="text" id="client-phone" value="+966 5X XXX XXXX">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-col">
                             <label>الوجهة</label>
-                            <input type="text" value="جورجيا">
+                            <input type="text" id="destination" value="جورجيا">
                         </div>
                         <div class="form-col">
                             <label>المدن</label>
-                            <input type="text" value="تيبليسي، باكورياني، باتومي">
+                            <input type="text" id="cities" value="تيبليسي، باكورياني، باتومي">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-col">
                             <label>تاريخ السفر</label>
-                            <input type="text" value="11 - 20 ديسمبر 2024">
+                            <input type="text" id="travel-date" value="11 - 20 ديسمبر 2024">
                         </div>
                         <div class="form-col">
                             <label>عدد الليالي</label>
-                            <input type="number" value="9">
+                            <input type="number" id="nights-count" value="9">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-col">
                             <label>عدد البالغين</label>
-                            <input type="number" value="4">
+                            <input type="number" id="adults-count" value="4">
                         </div>
                         <div class="form-col">
                             <label>عدد الأطفال</label>
-                            <input type="number" value="0">
+                            <input type="number" id="children-count" value="0">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>مستوى البرنامج</label>
-                        <select>
+                        <select id="program-level">
                             <option value="special" selected>برنامج خاص VIP</option>
                             <option value="premium">برنامج متميز</option>
                             <option value="economy">برنامج اقتصادي</option>
@@ -574,92 +624,125 @@
                 <div class="toggle-container">
                     <span class="toggle-label">تفعيل قسم معلومات الطيران</span>
                     <label class="toggle-switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" checked id="flight-toggle">
                         <span class="slider"></span>
                     </label>
                 </div>
 
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="material-icons">flight_takeoff</i>
-                        رحلة الذهاب
+                <div id="flights-container">
+                    <!-- Flight 1 - Outbound -->
+                    <div class="form-section flight-section">
+                        <div class="section-title">
+                            <i class="material-icons">flight_takeoff</i>
+                            رحلة الذهاب
+                        </div>
+                        <div class="image-upload">
+                            <div class="image-preview" id="outbound-airline-preview">
+                                <i class="material-icons" style="font-size: 36px;">flight</i>
+                            </div>
+                            <div class="upload-buttons">
+                                <button class="upload-btn" onclick="document.getElementById('outbound-airline-input').click()">
+                                    <i class="material-icons">cloud_upload</i>
+                                    إضافة صورة خطوط الطيران
+                                    <input type="file" id="outbound-airline-input" accept="image/*" style="display: none;" onchange="previewImage(this, 'outbound-airline-preview')">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>من</label>
+                                <input type="text" class="flight-from" value="جدة (JED)">
+                            </div>
+                            <div class="form-col">
+                                <label>إلى</label>
+                                <input type="text" class="flight-to" value="تيبليسي (TBS)">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>التاريخ</label>
+                                <input type="text" class="flight-date" value="11 ديسمبر 2024">
+                            </div>
+                            <div class="form-col">
+                                <label>شركة الطيران</label>
+                                <input type="text" class="airline" value="فلاي ناس">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>وقت المغادرة</label>
+                                <input type="text" class="departure-time" value="08:20 ص">
+                            </div>
+                            <div class="form-col">
+                                <label>وقت الوصول</label>
+                                <input type="text" class="arrival-time" value="01:05 م">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ملاحظات الرحلة</label>
+                            <input type="text" class="flight-notes" value="مباشر - تذاكر اقتصادية">
+                        </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>من</label>
-                            <input type="text" value="جدة (JED)">
+
+                    <!-- Flight 2 - Return -->
+                    <div class="form-section flight-section">
+                        <div class="section-title">
+                            <i class="material-icons">flight_land</i>
+                            رحلة العودة
                         </div>
-                        <div class="form-col">
-                            <label>إلى</label>
-                            <input type="text" value="تيبليسي (TBS)">
+                        <div class="image-upload">
+                            <div class="image-preview" id="return-airline-preview">
+                                <i class="material-icons" style="font-size: 36px;">flight</i>
+                            </div>
+                            <div class="upload-buttons">
+                                <button class="upload-btn" onclick="document.getElementById('return-airline-input').click()">
+                                    <i class="material-icons">cloud_upload</i>
+                                    إضافة صورة خطوط الطيران
+                                    <input type="file" id="return-airline-input" accept="image/*" style="display: none;" onchange="previewImage(this, 'return-airline-preview')">
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>التاريخ</label>
-                            <input type="text" value="11 ديسمبر 2024">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>من</label>
+                                <input type="text" class="flight-from" value="تيبليسي (TBS)">
+                            </div>
+                            <div class="form-col">
+                                <label>إلى</label>
+                                <input type="text" class="flight-to" value="جدة (JED)">
+                            </div>
                         </div>
-                        <div class="form-col">
-                            <label>شركة الطيران</label>
-                            <input type="text" value="فلاي ناس">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>التاريخ</label>
+                                <input type="text" class="flight-date" value="20 ديسمبر 2024">
+                            </div>
+                            <div class="form-col">
+                                <label>شركة الطيران</label>
+                                <input type="text" class="airline" value="فلاي ناس">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>وقت المغادرة</label>
-                            <input type="text" value="08:20 ص">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>وقت المغادرة</label>
+                                <input type="text" class="departure-time" value="01:55 م">
+                            </div>
+                            <div class="form-col">
+                                <label>وقت الوصول</label>
+                                <input type="text" class="arrival-time" value="05:15 م">
+                            </div>
                         </div>
-                        <div class="form-col">
-                            <label>وقت الوصول</label>
-                            <input type="text" value="01:05 م">
+                        <div class="form-group">
+                            <label>ملاحظات الرحلة</label>
+                            <input type="text" class="flight-notes" value="مباشر - تذاكر اقتصادية">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>ملاحظات الرحلة</label>
-                        <input type="text" value="مباشر - تذاكر اقتصادية">
                     </div>
                 </div>
 
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="material-icons">flight_land</i>
-                        رحلة العودة
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>من</label>
-                            <input type="text" value="تيبليسي (TBS)">
-                        </div>
-                        <div class="form-col">
-                            <label>إلى</label>
-                            <input type="text" value="جدة (JED)">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>التاريخ</label>
-                            <input type="text" value="20 ديسمبر 2024">
-                        </div>
-                        <div class="form-col">
-                            <label>شركة الطيران</label>
-                            <input type="text" value="فلاي ناس">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>وقت المغادرة</label>
-                            <input type="text" value="01:55 م">
-                        </div>
-                        <div class="form-col">
-                            <label>وقت الوصول</label>
-                            <input type="text" value="05:15 م">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>ملاحظات الرحلة</label>
-                        <input type="text" value="مباشر - تذاكر اقتصادية">
-                    </div>
-                </div>
+                <button class="btn btn-add" id="add-flight-btn">
+                    <i class="material-icons">add</i>
+                    إضافة رحلة طيران جديدة
+                </button>
             </div>
 
             <!-- Hotels Tab -->
@@ -667,72 +750,133 @@
                 <div class="toggle-container">
                     <span class="toggle-label">تفعيل قسم الفنادق</span>
                     <label class="toggle-switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" checked id="hotels-toggle">
                         <span class="slider"></span>
                     </label>
                 </div>
 
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="material-icons">hotel</i>
-                        فندق 1: Gino Seaside Tbilisi
+                <div id="hotels-container">
+                    <!-- Hotel 1 -->
+                    <div class="form-section hotel-section">
+                        <div class="section-title">
+                            <i class="material-icons">hotel</i>
+                            فندق 1: Gino Seaside Tbilisi
+                        </div>
+                        <div class="image-upload">
+                            <div class="image-preview" id="hotel-1-preview">
+                                <i class="material-icons" style="font-size: 36px;">hotel</i>
+                            </div>
+                            <div class="upload-buttons">
+                                <button class="upload-btn" onclick="document.getElementById('hotel-1-input').click()">
+                                    <i class="material-icons">cloud_upload</i>
+                                    إضافة صورة الفندق
+                                    <input type="file" id="hotel-1-input" accept="image/*" style="display: none;" onchange="previewImage(this, 'hotel-1-preview')">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>اسم الفندق</label>
+                                <input type="text" class="hotel-name" value="Gino Seaside Tbilisi">
+                            </div>
+                            <div class="form-col">
+                                <label>المدينة</label>
+                                <input type="text" class="hotel-city" value="تيبليسي">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>تاريخ الإقامة</label>
+                                <input type="text" class="hotel-dates" value="11 - 13 ديسمبر (ليلتين)">
+                            </div>
+                            <div class="form-col">
+                                <label>نوع الغرفة</label>
+                                <input type="text" class="room-type" value="غرفتين ثنائية">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>الوجبات المرفقة</label>
+                                <input type="text" class="meals" value="فطور فقط">
+                            </div>
+                            <div class="form-col">
+                                <label>تقييم الفندق</label>
+                                <select class="hotel-rating">
+                                    <option value="3">3 نجوم</option>
+                                    <option value="4" selected>4 نجوم</option>
+                                    <option value="5">5 نجوم</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ملاحظات الفندق</label>
+                            <textarea class="hotel-notes" rows="2">فندق 4 نجوم، يقع بالقرب من وسط المدينة القديمة</textarea>
+                        </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>المدينة</label>
-                            <input type="text" value="تيبليسي">
+
+                    <!-- Hotel 2 -->
+                    <div class="form-section hotel-section">
+                        <div class="section-title">
+                            <i class="material-icons">hotel</i>
+                            فندق 2: Crystal Hotel & SPA Bakuriani
                         </div>
-                        <div class="form-col">
-                            <label>تاريخ الإقامة</label>
-                            <input type="text" value="11 - 13 ديسمبر (ليلتين)">
+                        <div class="image-upload">
+                            <div class="image-preview" id="hotel-2-preview">
+                                <i class="material-icons" style="font-size: 36px;">hotel</i>
+                            </div>
+                            <div class="upload-buttons">
+                                <button class="upload-btn" onclick="document.getElementById('hotel-2-input').click()">
+                                    <i class="material-icons">cloud_upload</i>
+                                    إضافة صورة الفندق
+                                    <input type="file" id="hotel-2-input" accept="image/*" style="display: none;" onchange="previewImage(this, 'hotel-2-preview')">
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>نوع الغرفة</label>
-                            <input type="text" value="غرفتين ثنائية">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>اسم الفندق</label>
+                                <input type="text" class="hotel-name" value="Crystal Hotel & SPA Bakuriani">
+                            </div>
+                            <div class="form-col">
+                                <label>المدينة</label>
+                                <input type="text" class="hotel-city" value="باكورياني">
+                            </div>
                         </div>
-                        <div class="form-col">
-                            <label>الوجبات المرفقة</label>
-                            <input type="text" value="فطور فقط">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>تاريخ الإقامة</label>
+                                <input type="text" class="hotel-dates" value="13 - 15 ديسمبر (ليلتين)">
+                            </div>
+                            <div class="form-col">
+                                <label>نوع الغرفة</label>
+                                <input type="text" class="room-type" value="غرفتين ثنائية">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>ملاحظات الفندق</label>
-                        <textarea rows="2">فندق 4 نجوم، يقع بالقرب من وسط المدينة القديمة</textarea>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>الوجبات المرفقة</label>
+                                <input type="text" class="meals" value="فطور فقط">
+                            </div>
+                            <div class="form-col">
+                                <label>تقييم الفندق</label>
+                                <select class="hotel-rating">
+                                    <option value="3">3 نجوم</option>
+                                    <option value="4" selected>4 نجوم</option>
+                                    <option value="5">5 نجوم</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ملاحظات الفندق</label>
+                            <textarea class="hotel-notes" rows="2">منتجع صحي يوفر إطلالات رائعة على الجبال</textarea>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-section">
-                    <div class="section-title">
-                        <i class="material-icons">hotel</i>
-                        فندق 2: Crystal Hotel & SPA Bakuriani
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>المدينة</label>
-                            <input type="text" value="باكورياني">
-                        </div>
-                        <div class="form-col">
-                            <label>تاريخ الإقامة</label>
-                            <input type="text" value="13 - 15 ديسمبر (ليلتين)">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>نوع الغرفة</label>
-                            <input type="text" value="غرفتين ثنائية">
-                        </div>
-                        <div class="form-col">
-                            <label>الوجبات المرفقة</label>
-                            <input type="text" value="فطور فقط">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>ملاحظات الفندق</label>
-                        <textarea rows="2">منتجع صحي يوفر إطلالات رائعة على الجبال</textarea>
-                    </div>
-                </div>
+                <button class="btn btn-add" id="add-hotel-btn">
+                    <i class="material-icons">add</i>
+                    إضافة فندق جديد
+                </button>
             </div>
 
             <!-- Program Tab -->
@@ -740,7 +884,7 @@
                 <div class="toggle-container">
                     <span class="toggle-label">تفعيل قسم البرنامج اليومي</span>
                     <label class="toggle-switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" checked id="program-toggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -826,7 +970,7 @@
                 <div class="toggle-container">
                     <span class="toggle-label">تفعيل قسم استئجار السيارة</span>
                     <label class="toggle-switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" checked id="car-toggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -885,7 +1029,7 @@
                 <div class="toggle-container">
                     <span class="toggle-label">تفعيل قسم جدول التنقلات</span>
                     <label class="toggle-switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" checked id="transport-toggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -945,7 +1089,7 @@
                 <div class="toggle-container">
                     <span class="toggle-label">تفعيل قسم الباقة والتكلفة</span>
                     <label class="toggle-switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" checked id="package-toggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -1028,6 +1172,9 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">تم حفظ السجل بنجاح</div>
+
     <script>
         // Tab switching functionality
         document.querySelectorAll('.tab').forEach(tab => {
@@ -1047,13 +1194,326 @@
         document.querySelectorAll('.toggle-switch input').forEach(toggle => {
             toggle.addEventListener('change', function() {
                 const section = this.closest('.tab-content');
-                const formSections = section.querySelectorAll('.form-section');
+                const formSections = section.querySelectorAll('.form-section, .btn-add');
                 
                 formSections.forEach(s => {
                     s.style.opacity = this.checked ? '1' : '0.5';
                     s.style.pointerEvents = this.checked ? 'auto' : 'none';
                 });
             });
+        });
+
+        // Image preview functionality
+        function previewImage(input, previewId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById(previewId);
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Add new hotel functionality
+        let hotelCount = 2;
+        document.getElementById('add-hotel-btn').addEventListener('click', function() {
+            hotelCount++;
+            const hotelsContainer = document.getElementById('hotels-container');
+            
+            const newHotelSection = document.createElement('div');
+            newHotelSection.className = 'form-section hotel-section';
+            newHotelSection.innerHTML = `
+                <div class="section-title">
+                    <i class="material-icons">hotel</i>
+                    فندق ${hotelCount}: فندق جديد
+                </div>
+                <div class="image-upload">
+                    <div class="image-preview" id="hotel-${hotelCount}-preview">
+                        <i class="material-icons" style="font-size: 36px;">hotel</i>
+                    </div>
+                    <div class="upload-buttons">
+                        <button class="upload-btn" onclick="document.getElementById('hotel-${hotelCount}-input').click()">
+                            <i class="material-icons">cloud_upload</i>
+                            إضافة صورة الفندق
+                            <input type="file" id="hotel-${hotelCount}-input" accept="image/*" style="display: none;" onchange="previewImage(this, 'hotel-${hotelCount}-preview')">
+                        </button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>اسم الفندق</label>
+                        <input type="text" class="hotel-name" value="">
+                    </div>
+                    <div class="form-col">
+                        <label>المدينة</label>
+                        <input type="text" class="hotel-city" value="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>تاريخ الإقامة</label>
+                        <input type="text" class="hotel-dates" value="">
+                    </div>
+                    <div class="form-col">
+                        <label>نوع الغرفة</label>
+                        <input type="text" class="room-type" value="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>الوجبات المرفقة</label>
+                        <input type="text" class="meals" value="">
+                    </div>
+                    <div class="form-col">
+                        <label>تقييم الفندق</label>
+                        <select class="hotel-rating">
+                            <option value="3">3 نجوم</option>
+                            <option value="4" selected>4 نجوم</option>
+                            <option value="5">5 نجوم</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات الفندق</label>
+                    <textarea class="hotel-notes" rows="2"></textarea>
+                </div>
+            `;
+            
+            hotelsContainer.appendChild(newHotelSection);
+            
+            // Scroll to the new hotel section
+            newHotelSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        // Add new flight functionality
+        let flightCount = 2;
+        document.getElementById('add-flight-btn').addEventListener('click', function() {
+            flightCount++;
+            const flightsContainer = document.getElementById('flights-container');
+            
+            const newFlightSection = document.createElement('div');
+            newFlightSection.className = 'form-section flight-section';
+            newFlightSection.innerHTML = `
+                <div class="section-title">
+                    <i class="material-icons">flight</i>
+                    رحلة ${flightCount}
+                </div>
+                <div class="image-upload">
+                    <div class="image-preview" id="flight-${flightCount}-preview">
+                        <i class="material-icons" style="font-size: 36px;">flight</i>
+                    </div>
+                    <div class="upload-buttons">
+                        <button class="upload-btn" onclick="document.getElementById('flight-${flightCount}-input').click()">
+                            <i class="material-icons">cloud_upload</i>
+                            إضافة صورة خطوط الطيران
+                            <input type="file" id="flight-${flightCount}-input" accept="image/*" style="display: none;" onchange="previewImage(this, 'flight-${flightCount}-preview')">
+                        </button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>من</label>
+                        <input type="text" class="flight-from" value="">
+                    </div>
+                    <div class="form-col">
+                        <label>إلى</label>
+                        <input type="text" class="flight-to" value="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>التاريخ</label>
+                        <input type="text" class="flight-date" value="">
+                    </div>
+                    <div class="form-col">
+                        <label>شركة الطيران</label>
+                        <input type="text" class="airline" value="">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label>وقت المغادرة</label>
+                        <input type="text" class="departure-time" value="">
+                    </div>
+                    <div class="form-col">
+                        <label>وقت الوصول</label>
+                        <input type="text" class="arrival-time" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات الرحلة</label>
+                    <input type="text" class="flight-notes" value="">
+                </div>
+            `;
+            
+            flightsContainer.appendChild(newFlightSection);
+            
+            // Scroll to the new flight section
+            newFlightSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        // Save record functionality
+        document.getElementById('save-record-btn').addEventListener('click', function() {
+            // Gather all form data
+            const formData = {
+                clientName: document.getElementById('client-name').value,
+                clientPhone: document.getElementById('client-phone').value,
+                destination: document.getElementById('destination').value,
+                cities: document.getElementById('cities').value,
+                travelDate: document.getElementById('travel-date').value,
+                nightsCount: document.getElementById('nights-count').value,
+                adultsCount: document.getElementById('adults-count').value,
+                childrenCount: document.getElementById('children-count').value,
+                programLevel: document.getElementById('program-level').value,
+                flightEnabled: document.getElementById('flight-toggle').checked,
+                hotelsEnabled: document.getElementById('hotels-toggle').checked,
+                programEnabled: document.getElementById('program-toggle').checked,
+                carEnabled: document.getElementById('car-toggle').checked,
+                transportEnabled: document.getElementById('transport-toggle').checked,
+                packageEnabled: document.getElementById('package-toggle').checked,
+                flights: [],
+                hotels: []
+            };
+            
+            // Gather flight data
+            document.querySelectorAll('.flight-section').forEach((section, index) => {
+                formData.flights.push({
+                    from: section.querySelector('.flight-from').value,
+                    to: section.querySelector('.flight-to').value,
+                    date: section.querySelector('.flight-date').value,
+                    airline: section.querySelector('.airline').value,
+                    departureTime: section.querySelector('.departure-time').value,
+                    arrivalTime: section.querySelector('.arrival-time').value,
+                    notes: section.querySelector('.flight-notes').value
+                });
+            });
+            
+            // Gather hotel data
+            document.querySelectorAll('.hotel-section').forEach((section, index) => {
+                formData.hotels.push({
+                    name: section.querySelector('.hotel-name').value,
+                    city: section.querySelector('.hotel-city').value,
+                    dates: section.querySelector('.hotel-dates').value,
+                    roomType: section.querySelector('.room-type').value,
+                    meals: section.querySelector('.meals').value,
+                    rating: section.querySelector('.hotel-rating').value,
+                    notes: section.querySelector('.hotel-notes').value
+                });
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('tourismOfferData', JSON.stringify(formData));
+            
+            // Show toast notification
+            const toast = document.getElementById('toast');
+            toast.textContent = 'تم حفظ السجل بنجاح';
+            toast.style.display = 'block';
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        });
+
+        // Load saved data on page load
+        window.addEventListener('load', function() {
+            const savedData = localStorage.getItem('tourismOfferData');
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                
+                // Populate basic info
+                document.getElementById('client-name').value = formData.clientName || '';
+                document.getElementById('client-phone').value = formData.clientPhone || '';
+                document.getElementById('destination').value = formData.destination || '';
+                document.getElementById('cities').value = formData.cities || '';
+                document.getElementById('travel-date').value = formData.travelDate || '';
+                document.getElementById('nights-count').value = formData.nightsCount || '';
+                document.getElementById('adults-count').value = formData.adultsCount || '';
+                document.getElementById('children-count').value = formData.childrenCount || '';
+                document.getElementById('program-level').value = formData.programLevel || 'special';
+                
+                // Set toggles
+                document.getElementById('flight-toggle').checked = formData.flightEnabled !== false;
+                document.getElementById('hotels-toggle').checked = formData.hotelsEnabled !== false;
+                document.getElementById('program-toggle').checked = formData.programEnabled !== false;
+                document.getElementById('car-toggle').checked = formData.carEnabled !== false;
+                document.getElementById('transport-toggle').checked = formData.transportEnabled !== false;
+                document.getElementById('package-toggle').checked = formData.packageEnabled !== false;
+                
+                // Note: In a real implementation, you would also populate the flights and hotels
+                // This is simplified for this example
+            }
+        });
+
+        // Download offer as PDF functionality
+        document.getElementById('download-offer-btn').addEventListener('click', async function() {
+            const { jsPDF } = window.jspdf;
+            
+            // Show loading state
+            this.innerHTML = '<i class="material-icons">hourglass_empty</i> جاري التحميل...';
+            this.disabled = true;
+            
+            try {
+                // Create a temporary container for PDF generation
+                const element = document.getElementById('offer-content');
+                
+                // Use html2canvas to capture the element
+                const canvas = await html2canvas(element, {
+                    scale: 2, // Higher scale for better quality
+                    useCORS: true,
+                    logging: false,
+                    windowWidth: element.scrollWidth,
+                    windowHeight: element.scrollHeight
+                });
+                
+                // Calculate dimensions
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                
+                // Calculate aspect ratio to fit the image in the PDF
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                const imgX = (pdfWidth - imgWidth * ratio) / 2;
+                const imgY = 10;
+                
+                // Add image to PDF
+                pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+                
+                // Save the PDF
+                const clientName = document.getElementById('client-name').value || 'عرض';
+                const destination = document.getElementById('destination').value || 'سياحي';
+                pdf.save(`${clientName}_${destination}.pdf`);
+                
+                // Show success message
+                const toast = document.getElementById('toast');
+                toast.textContent = 'تم تحميل العرض بنجاح';
+                toast.style.display = 'block';
+                
+                // Hide toast after 3 seconds
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                
+                // Show error message
+                const toast = document.getElementById('toast');
+                toast.textContent = 'حدث خطأ أثناء تحميل العرض';
+                toast.style.display = 'block';
+                
+                // Hide toast after 3 seconds
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
+            } finally {
+                // Reset button state
+                this.innerHTML = '<i class="material-icons">download</i> تحميل العرض';
+                this.disabled = false;
+            }
         });
     </script>
 </body>
