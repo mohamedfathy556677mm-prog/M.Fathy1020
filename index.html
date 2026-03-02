@@ -351,148 +351,187 @@
             margin: 0 auto;
             direction: rtl;
         }
-
+        
         /* Header Design */
-        .offer-header { position: relative; height: 25rem; overflow: hidden; }
-        .offer-header-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-        .offer-header-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(26, 37, 54, 0.4), rgba(26, 37, 54, 0.95)); z-index: 1; }
+        .header-offer {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+        
+        .header-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 0;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(26, 37, 54, 0.4), rgba(26, 37, 54, 0.95));
+            z-index: 1;
+        }
 
         .brand-badge {
-            position: absolute; top: 1.25rem; right: 1.25rem;
+            position: absolute; top: 20px; right: 20px;
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            padding: 0.5rem 1.25rem; border-radius: 50px;
-            display: flex; align-items: center; gap: 0.625rem; z-index: 2;
+            padding: 8px 20px; border-radius: 50px;
+            display: flex; align-items: center; gap: 10px; z-index: 2;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .brand-badge img { height: 2.5rem; }
-        .brand-badge span { color: var(--primary); font-weight: 700; font-size: 0.875rem; }
+        .brand-badge img { height: 40px; }
+        .brand-badge span { color: var(--primary); font-weight: 700; font-size: 14px; }
 
-        .offer-header-content {
+        .header-content {
             position: relative; z-index: 2; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; padding: 0 2.5rem; color: white;
+            text-align: center; padding: 0 40px; color: white;
         }
 
         .tag-pill {
             background: var(--accent-2); color: white;
-            padding: 0.3125rem 0.9375rem; border-radius: 1.25rem;
-            font-size: 0.875rem; font-weight: 700; margin-bottom: 0.9375rem;
-            text-transform: uppercase; letter-spacing: 0.0625rem;
+            padding: 5px 15px; border-radius: 20px;
+            font-size: 14px; font-weight: 700; margin-bottom: 15px;
+            text-transform: uppercase; letter-spacing: 1px;
             box-shadow: 0 4px 10px rgba(255, 107, 53, 0.4);
         }
 
-        .offer-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.625rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-        .offer-subtitle { font-size: 1.25rem; font-weight: 500; opacity: 0.9; max-width: 37.5rem; }
-
-        .offer-content-wrapper { padding: 2.5rem; position: relative; }
-        .offer-content-wrapper::before {
-            content: ''; position: absolute; top: -2.5rem; left: 0; right: 0; height: 3.75rem;
-            background: var(--white); border-radius: 2.5rem 2.5rem 0 0; z-index: 1;
+        .title-offer { font-size: 42px; font-weight: 800; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .subtitle-offer { font-size: 20px; font-weight: 500; opacity: 0.9; max-width: 600px; }
+        
+        /* Content Wrapper */
+        .content-wrapper { padding: 40px; position: relative; }
+        .content-wrapper::before {
+            content: ''; position: absolute; top: -40px; left: 0; right: 0; height: 60px;
+            background: var(--white); border-radius: 40px 40px 0 0; z-index: 1;
         }
 
         .overview-cards {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 0.9375rem;
-            margin-bottom: 2.5rem;
-            position: relative; z-index: 2;
+            gap: 15px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
         }
 
         .info-card {
-            background: var(--bg-light); padding: 1.25rem 0.9375rem; border-radius: 1rem;
+            background: var(--bg-light); padding: 20px 15px; border-radius: 16px;
             text-align: center; border: 1px solid transparent;
         }
 
         .info-card .material-icons {
-            font-size: 2rem; color: var(--accent-2); margin-bottom: 0.625rem;
-            background: rgba(255, 107, 53, 0.1); padding: 0.625rem; border-radius: 50%;
+            font-size: 32px; color: var(--accent-2); margin-bottom: 10px;
+            background: rgba(255, 107, 53, 0.1); padding: 10px; border-radius: 50%;
         }
 
-        .info-label { display: block; font-size: 0.75rem; color: var(--text-light); margin-bottom: 0.3125rem; }
-        .info-value { font-weight: 700; color: var(--primary); font-size: 0.875rem; }
+        .info-label { display: block; font-size: 12px; color: var(--text-light); margin-bottom: 5px; }
+        .info-value { font-weight: 700; color: var(--primary); font-size: 14px; }
 
-        .offer-section { margin-bottom: 2.5rem; }
-        .section-header { display: flex; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.625rem; border-bottom: 2px solid var(--bg-light); }
-        .section-icon { background: var(--primary); color: white; width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; margin-left: 0.9375rem; }
-        .section-title { font-size: 1.375rem; font-weight: 700; color: var(--primary); }
+        .section { margin-bottom: 40px; }
+        .section-header { display: flex; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--bg-light); }
+        .section-icon { background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-left: 15px; }
+        .section-title { font-size: 22px; font-weight: 700; color: var(--primary); }
 
         /* Flight Card */
         .flight-card {
-            background: var(--bg-light); border-radius: var(--radius); padding: 1.25rem;
-            margin-bottom: 0.9375rem; display: flex; align-items: center; position: relative;
-            border-right: 0.3125rem solid var(--accent-2);
+            background: var(--bg-light); border-radius: var(--radius); padding: 20px;
+            margin-bottom: 15px; display: flex; align-items: center; position: relative;
+            border-right: 5px solid var(--accent-2);
         }
-        .flight-icon-box { width: 3.125rem; height: 3.125rem; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1.25rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .flight-icon-box .material-icons { color: var(--primary); font-size: 1.5rem; }
+        .flight-icon-box { width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 20px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .flight-icon-box .material-icons { color: var(--primary); font-size: 24px; }
         .flight-details { flex: 1; }
-        .flight-main-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.625rem; }
-        .flight-route { font-weight: 700; font-size: 1.125rem; color: var(--text-dark); }
-        .flight-date { background: var(--primary); color: white; padding: 0.25rem 0.625rem; border-radius: 0.375rem; font-size: 0.75rem; }
-        .flight-meta { display: flex; gap: 1.25rem; font-size: 0.875rem; color: var(--text-light); flex-wrap: wrap; }
-        .flight-meta span { display: flex; align-items: center; gap: 0.3125rem; }
+        .flight-main-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .flight-route { font-weight: 700; font-size: 18px; color: var(--text-dark); }
+        .flight-date { background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px; }
+        .flight-meta { display: flex; gap: 20px; font-size: 14px; color: var(--text-light); }
+        .flight-meta span { display: flex; align-items: center; gap: 5px; }
 
         /* Hotels Grid */
-        .hotels-grid { display: grid; gap: 1.25rem; }
+        .hotels-grid { display: grid; gap: 20px; }
         .hotel-card { display: flex; background: white; border-radius: var(--radius); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .hotel-image { width: 8.75rem; height: auto; object-fit: cover; }
-        .hotel-content { padding: 0.9375rem 1.25rem; flex: 1; }
-        .hotel-dates { display: inline-block; background: rgba(26, 37, 54, 0.1); color: var(--primary); padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .hotel-name { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.3125rem; color: var(--text-dark); }
-        .hotel-room { font-size: 0.875rem; color: var(--text-light); display: flex; align-items: center; gap: 0.3125rem; }
+        .hotel-image { width: 140px; height: auto; object-fit: cover; }
+        .hotel-content { padding: 15px 20px; flex: 1; }
+        .hotel-dates { display: inline-block; background: rgba(26, 37, 54, 0.1); color: var(--primary); padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+        .hotel-name { font-size: 18px; font-weight: 700; margin-bottom: 5px; color: var(--text-dark); }
+        .hotel-room { font-size: 14px; color: var(--text-light); display: flex; align-items: center; gap: 5px; }
 
         /* Car Rental Section */
-        .car-card {
-            background: var(--bg-light); border-radius: 1rem; overflow: hidden; margin-top: 0.9375rem; border: 1px solid #e0e0e0;
-        }
-        .car-header {
-            background: linear-gradient(to right, var(--primary), var(--primary-light-2)); color: white;
-            padding: 0.9375rem 1.25rem; display: flex; justify-content: space-between; align-items: center;
-        }
+        .car-card { background: var(--bg-light); border-radius: 16px; overflow: hidden; margin-top: 15px; border: 1px solid #e0e0e0; }
+        .car-header { background: linear-gradient(to right, var(--primary), var(--primary-light-2)); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .car-table { width: 100%; border-collapse: collapse; }
-        .car-table th { text-align: right; padding: 0.75rem 1.25rem; background: #f0f2f5; color: var(--primary); font-weight: 700; border-bottom: 1px solid #e0e0e0; width: 30%; }
-        .car-table td { padding: 0.75rem 1.25rem; border-bottom: 1px solid #f0f0f0; }
-        .car-features { display: flex; gap: 1rem; margin-top: 0.5rem; }
-        .car-feature { display: flex; align-items: center; gap: 0.3125rem; font-size: 0.875rem; }
-        .car-feature i { color: var(--accent-2); }
+        .car-table th { text-align: right; padding: 12px 20px; background: #f0f2f5; color: var(--primary); font-weight: 700; border-bottom: 1px solid #e0e0e0; width: 30%; }
+        .car-table td { padding: 12px 20px; border-bottom: 1px solid #f0f0f0; }
 
         /* Transfers Table */
-        .transfers-table { width: 100%; border-collapse: collapse; margin-top: 0.625rem; background: white; border-radius: 0.75rem; overflow: hidden; border: 1px solid #eee; }
+        .transfers-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #eee; }
         .transfers-table thead tr { background: var(--primary); color: white; }
-        .transfers-table th { padding: 0.75rem 0.9375rem; text-align: right; font-weight: 600; }
-        .transfers-table td { padding: 0.75rem 0.9375rem; border-bottom: 1px solid #f0f0f0; font-size: 0.875rem; }
+        .transfers-table th { padding: 12px 15px; text-align: right; font-weight: 600; }
+        .transfers-table td { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
         .transfers-table tbody tr:nth-child(even) { background: #FAFAFA; }
-
-        /* Inclusions/Exclusions Lists */
-        .inclusions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .list-box { background: #f9f9f9; padding: 1rem; border-radius: 0.75rem; }
-        .list-box h4 { color: var(--primary); margin-bottom: 0.75rem; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-        .list-box ul { list-style: none; }
-        .list-box li { padding-right: 1.5rem; position: relative; margin-bottom: 0.5rem; font-size: 0.9rem; color: #444; }
-        .list-box li::before { content: '•'; position: absolute; right: 0; color: var(--accent-2); font-weight: bold; }
-        .exclusions-list li::before { color: #f44336; }
+        .trans-icon { color: var(--accent-2); font-weight: bold; }
 
         /* Timeline */
-        .timeline { position: relative; padding-right: 1.875rem; }
-        .timeline::before { content: ''; position: absolute; right: 0.4375rem; top: 0.625rem; bottom: 0.625rem; width: 0.125rem; background: #E2E8F0; }
-        .timeline-item { position: relative; margin-bottom: 1.875rem; }
-        .timeline-dot { position: absolute; right: -1.6875rem; top: 0.3125rem; width: 1rem; height: 1rem; border-radius: 50%; background: var(--white); border: 0.25rem solid var(--accent-2); z-index: 1; }
-        .timeline-day-title { font-size: 1.125rem; font-weight: 700; color: var(--primary); margin-bottom: 0.625rem; }
-        .timeline-content { background: var(--bg-light); padding: 0.9375rem; border-radius: 0.75rem; margin-right: 0.625rem; }
-        .activity-tag { display: inline-flex; align-items: center; padding: 0.3125rem 0; width: 100%; font-size: 0.9rem; color: #333; }
+        .timeline { position: relative; padding-right: 30px; }
+        .timeline::before { content: ''; position: absolute; right: 7px; top: 10px; bottom: 10px; width: 2px; background: #E2E8F0; }
+        .timeline-item { position: relative; margin-bottom: 30px; }
+        .timeline-dot { position: absolute; right: -27px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--white); border: 4px solid var(--accent-2); z-index: 1; }
+        .timeline-day-title { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .timeline-content { background: var(--bg-light); padding: 15px; border-radius: 12px; margin-right: 10px; }
+        .activity-tag { display: inline-flex; align-items: center; padding: 5px 10px; margin: 0 0 8px 0; background: white; border-radius: 6px; font-size: 14px; color: var(--text-dark); width: 100%; }
+        .activity-tag i { color: var(--accent-2); font-size: 16px; margin-left: 8px; }
 
-        /* Price Card */
-        .cost-card { background: linear-gradient(135deg, var(--primary) 0%, #2C3E50 100%); color: white; padding: 1.875rem; border-radius: var(--radius); text-align: center; margin-bottom: 1.875rem; }
-        .total-label { font-size: 1rem; opacity: 0.8; margin-bottom: 0.3125rem; }
-        .total-amount { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.9375rem; }
+        /* Cost Card */
+        .cost-card { background: linear-gradient(135deg, var(--primary) 0%, #2C3E50 100%); color: white; padding: 30px; border-radius: var(--radius); text-align: center; margin-bottom: 30px; }
+        .total-label { font-size: 16px; opacity: 0.8; margin-bottom: 5px; }
+        .total-amount { font-size: 36px; font-weight: 800; margin-bottom: 15px; }
         
-        .offer-footer { text-align: center; padding: 1.875rem; background: var(--bg-light); color: var(--text-light); font-size: 0.875rem; }
-        .footer-logo img { height: 3.75rem; opacity: 0.9; margin-bottom: 0.9375rem; }
+        /* Inclusions/Exclusions */
+        .inclusions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .list-box { background: #f9f9f9; padding: 20px; border-radius: 16px; }
+        .list-box h4 { color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .list-box ul { list-style: none; }
+        .list-box li { margin-bottom: 8px; display: flex; gap: 8px; font-size: 13px; }
+        .list-box li i { font-size: 14px; }
+        .includes-list li i { color: var(--primary); }
+        .excludes-list li i { color: var(--accent-2); }
+
+        /* Policies Section */
+        .policies-grid { display: grid; gap: 20px; }
+        .policy-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; overflow: hidden; }
+        .policy-header { background: var(--bg-light); padding: 15px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #E2E8F0; }
+        .policy-header i { color: var(--accent-2); }
+        .policy-header h4 { color: var(--primary); font-size: 18px; font-weight: 700; }
+        .policy-body { padding: 20px; }
+        .policy-list { list-style: none; }
+        .policy-list li { position: relative; padding-right: 20px; margin-bottom: 10px; font-size: 14px; color: var(--text-dark); line-height: 1.6; }
+        .policy-list li::before { content: "•"; color: var(--accent-2); font-weight: bold; font-size: 18px; position: absolute; right: 0; top: -2px; }
+
+        /* Payment Methods */
+        .payment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 20px; }
+        .payment-item { background: var(--bg-light); padding: 10px; border-radius: 10px; text-align: center; font-size: 13px; font-weight: 600; color: var(--text-dark); display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .payment-item i { color: var(--primary); }
+        .bank-card { background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 15px; margin-bottom: 10px; }
+        .bank-header { display: flex; align-items: center; margin-bottom: 10px; color: var(--primary); font-weight: 700; }
+        .bank-info-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px; }
+        .bank-info-label { color: var(--text-light); }
+        .bank-info-value { font-weight: 600; font-family: monospace; direction: ltr; text-align: right; }
+
+        /* Terms */
+        .terms-section { background: #FFF5F5; padding: 20px; border-radius: 16px; border-right: 4px solid var(--accent-2); }
+        .terms-section h4 { color: #C53030; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .terms-list { padding-right: 0; list-style: none; }
+        .terms-list li { font-size: 13px; color: var(--text-dark); margin-bottom: 8px; position: relative; padding-right: 15px; }
+        .terms-list li::before { content: '•'; position: absolute; right: 0; color: var(--accent-2); }
+
+        /* Footer */
+        .footer-offer { text-align: center; padding: 30px; background: var(--bg-light); color: var(--text-light); font-size: 14px; }
+        .footer-logo img { height: 60px; opacity: 0.9; margin-bottom: 15px; }
 
         /* Responsive */
         @media (max-width: 600px) {
             .overview-cards { grid-template-columns: repeat(2, 1fr); }
-            .header { flex-direction: column; align-items: flex-start; }
-            .header-actions { width: 100%; justify-content: flex-end; }
             .inclusions-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -539,6 +578,8 @@
                 <li class="tab" data-tab="program"><i class="material-icons">calendar_today</i>البرنامج</li>
                 <li class="tab" data-tab="transport"><i class="material-icons">map</i>تنقلات</li>
                 <li class="tab" data-tab="package"><i class="material-icons">payments</i>الباقة</li>
+                <li class="tab" data-tab="policies"><i class="material-icons">gavel</i>سياسات</li>
+                <li class="tab" data-tab="payment"><i class="material-icons">account_balance_wallet</i>دفع</li>
                 <li class="tab" data-tab="records"><i class="material-icons">history</i>السجل</li>
             </ul>
         </div>
@@ -580,6 +621,10 @@
                         <div class="form-col"><label>عدد البالغين</label><input type="number" id="adults-count" value="2"></div>
                         <div class="form-col"><label>عدد الأطفال</label><input type="number" id="children-count" value="0"></div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-col"><label>نوع البرنامج</label><input type="text" id="program-type" value="برنامج خاص"></div>
+                        <div class="form-col"><label>منسق العرض</label><input type="text" id="coordinator" value="جمال"></div>
+                    </div>
                 </div>
             </div>
 
@@ -603,6 +648,7 @@
                             <div class="form-col"><label>وقت المغادرة</label><input type="text" class="departure-time" value="09:00 ص"></div>
                             <div class="form-col"><label>وقت الوصول</label><input type="text" class="arrival-time" value="02:00 م"></div>
                         </div>
+                        <div class="form-group"><label>نوع الرحلة</label><input type="text" class="flight-type" value="مباشر"></div>
                         <button class="btn btn-remove" onclick="removeSection('flight-section-0', 'flights-container')"><i class="material-icons">delete</i>حذف</button>
                     </div>
                 </div>
@@ -654,7 +700,7 @@
                         <div class="form-row">
                             <div class="form-col">
                                 <label>نوع السيارة</label>
-                                <input type="text" class="car-type" value="تويوتا كامري 2024">
+                                <input type="text" class="car-type" value="سيارة دفع رباعي (SUV) - 4 ركاب">
                             </div>
                             <div class="form-col">
                                 <label>تاريخ الاستئجار</label>
@@ -663,23 +709,27 @@
                         </div>
                         <div class="form-row">
                             <div class="form-col">
-                                <label>التأمين الشامل</label>
-                                <select class="insurance">
-                                    <option value="yes" selected>نعم</option>
-                                    <option value="no">لا</option>
-                                </select>
+                                <label>موديل السيارة</label>
+                                <input type="text" class="car-model" value="تويوتا راف 4 أو ما يماثلها">
                             </div>
                             <div class="form-col">
-                                <label>سائق إضافي</label>
-                                <select class="additional-driver">
-                                    <option value="yes">نعم</option>
-                                    <option value="no" selected>لا</option>
-                                </select>
+                                <label>مدة الإيجار</label>
+                                <input type="text" class="rental-duration" value="9 أيام">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label>استلام السيارة</label>
+                                <input type="text" class="pickup-location" value="مطار تيبليسي الدولي">
+                            </div>
+                            <div class="form-col">
+                                <label>تسليم السيارة</label>
+                                <input type="text" class="dropoff-location" value="مطار تيبليسي الدولي">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>ملاحظات</label>
-                            <textarea class="car-notes" rows="2">التسليم والاستلام في المطار</textarea>
+                            <label>المشمولات</label>
+                            <textarea class="car-inclusions" rows="2">تأمين شامل، كيلومترات مفتوحة، ضريبة القيمة المضافة</textarea>
                         </div>
                         <button class="btn btn-remove" onclick="removeSection('car-section-0', 'car-container')">
                             <i class="material-icons">delete</i>
@@ -723,9 +773,8 @@
                         </div>
                         <div class="form-row">
                             <div class="form-col"><label>التاريخ</label><input type="text" class="transport-date" value="15 مارس 2026"></div>
-                            <div class="form-col"><label>الوقت</label><input type="text" class="transport-time" value="02:30 م"></div>
+                            <div class="form-col"><label>وسيلة النقل</label><input type="text" class="transport-method" value="سيارة خاصة"></div>
                         </div>
-                        <div class="form-group"><label>نوع النقل</label><input type="text" class="transport-type" value="سيارة خاصة سائق"></div>
                         <button class="btn btn-remove" onclick="removeSection('transport-section-0', 'transport-container')"><i class="material-icons">delete</i>حذف</button>
                     </div>
                 </div>
@@ -740,6 +789,7 @@
                         <div class="form-col"><label>السعر الإجمالي</label><input type="number" id="total-price" value="4500"></div>
                         <div class="form-col"><label>العملة</label><select id="currency"><option value="SAR" selected>ريال سعودي</option><option value="USD">دولار</option></select></div>
                     </div>
+                    <div class="form-group"><label>شعار الخصم</label><input type="text" id="discount-badge" value="شامل خصم اليوم الوطني والتعامل الأول"></div>
                 </div>
 
                 <div class="form-section">
@@ -765,6 +815,84 @@
                 </div>
             </div>
 
+            <!-- Policies Tab -->
+            <div class="tab-content" id="policies">
+                <div class="form-section">
+                    <div class="section-title"><i class="material-icons">gavel</i>سياسات وملاحظات هامة</div>
+                    
+                    <div class="form-group">
+                        <label>سياسات الفنادق</label>
+                        <textarea class="policy-hotels" rows="4">وقت الدخول للفنادق يكون بين الساعة 2:00 إلى 3:00 عصرًا، ووقت الخروج الساعة 12:00 ظهرًا. الليلة الإضافية (Late check-out أو Early check-in) يمكن طلبها مقابل رسوم إضافية حسب سياسة الفندق والتوافر. الغرف مزدوجة أو منفصلة (Twin/Double) بحسب التوافر.</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>سياسات الطيران</label>
+                        <textarea class="policy-flights" rows="3">تشمل الباقة تذاكر الطيران (حسب التفاصيل المحددة في العرض). لا يمكن إلغاء أو تعديل التذاكر بعد تأكيدها نهائيًا، وذلك حسب سياسة شركة الطيران.</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>الوزن المسموح به</label>
+                        <textarea class="policy-weight" rows="2">الوزن المسموح به على الرحلات الداخلية: 20 كجم لكل شخص.</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>مواعيد الحضور إلى المطار</label>
+                        <textarea class="policy-airport" rows="2">يرجى الحضور إلى المطار قبل 3 ساعات من موعد الرحلات الخارجية. يرجى الحضور إلى المطار قبل ساعتين من موعد الرحلات الداخلية.</textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-title"><i class="material-icons">warning</i>الشروط العامة</div>
+                    <div class="form-group">
+                        <textarea class="general-terms" rows="3">الحجز غير قابل للإلغاء أو التعديل (المبلغ بالكامل غير مسترد). الشركة غير مسئولة عن تصاريح السفر وتأشيرات الخروج والعودة. قد تتغير الأسعار والإمكانية وفقًا لتاريخ السفر المطلوب.</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Tab -->
+            <div class="tab-content" id="payment">
+                <div class="form-section">
+                    <div class="section-title"><i class="material-icons">account_balance_wallet</i>طرق الدفع والحسابات البنكية</div>
+                    
+                    <div class="form-group">
+                        <label>الشركة المستفيدة</label>
+                        <input type="text" id="beneficiary" value="بوابات العالم للسفر والسياحة">
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="section-title"><i class="material-icons">account_balance</i>بنك الراجحي</div>
+                        <div class="form-row">
+                            <div class="form-col"><label>رقم الحساب</label><input type="text" class="bank-account" value="5876080452853"></div>
+                            <div class="form-col"><label>الآيبان</label><input type="text" class="bank-iban" value="SA5680000587608010452853"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="section-title"><i class="material-icons">account_balance</i>البنك الأهلي (SNB)</div>
+                        <div class="form-row">
+                            <div class="form-col"><label>رقم الحساب</label><input type="text" class="bank-account" value="01400019666903"></div>
+                            <div class="form-col"><label>الآيبان</label><input type="text" class="bank-iban" value="SA2910000001400019666903"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="section-title"><i class="material-icons">account_balance</i>بنك البلاد</div>
+                        <div class="form-row">
+                            <div class="form-col"><label>رقم الحساب</label><input type="text" class="bank-account" value="722140112730002"></div>
+                            <div class="form-col"><label>الآيبان</label><input type="text" class="bank-iban" value="SA9115000722140112730002"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="section-title"><i class="material-icons">account_balance</i>بنك SAB</div>
+                        <div class="form-row">
+                            <div class="form-col"><label>رقم الحساب</label><input type="text" class="bank-account" value="262342454001"></div>
+                            <div class="form-col"><label>الآيبان</label><input type="text" class="bank-iban" value="SA0645000000262342454001"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Records Tab -->
             <div class="tab-content" id="records">
                 <div class="form-section">
@@ -785,83 +913,110 @@
 
     <!-- Offer Template (Hidden) -->
     <div class="offer-template" id="offer-template">
-        <div class="offer-header">
-            <img src="https://images.unsplash.com/photo-1568781269783-e69b164ad26e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Header" class="offer-header-bg" id="pdf-header-img">
-            <div class="offer-header-overlay"></div>
+        <div class="header-offer">
+            <img src="https://images.unsplash.com/photo-1568781269783-e69b164ad26e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Header" class="header-bg" id="pdf-header-img">
+            <div class="header-overlay"></div>
             <div class="brand-badge">
                 <img src="" alt="Logo" id="pdf-logo-img">
-                <span>بوابات العالم</span>
+                <span>بوابات العالم للسفر والسياحة</span>
             </div>
-            <div class="offer-header-content">
-                <div class="tag-pill">عرض سياحي مميز</div>
-                <h1 class="offer-title" id="pdf-destination-title">اكتشف جمال جورجيا</h1>
-                <p class="offer-subtitle" id="pdf-subtitle">رحلة استثنائية لتجارب لا تُنسى</p>
+            <div class="header-content">
+                <div class="tag-pill">رحلة مميزة</div>
+                <h1 class="title-offer" id="pdf-destination-title">اكتشف جمال جورجيا</h1>
+                <p class="subtitle-offer" id="pdf-subtitle">رحلة استثنائية لتجارب لا تُنسى</p>
             </div>
         </div>
         
-        <div class="offer-content-wrapper">
+        <div class="content-wrapper">
             <div class="overview-cards">
-                <div class="info-card"><i class="material-icons">calendar_today</i><span class="info-label">المدة</span><span class="info-value" id="pdf-nights">10 ليالي</span></div>
-                <div class="info-card"><i class="material-icons">location_on</i><span class="info-label">الوجهة</span><span class="info-value" id="pdf-dest">جورجيا</span></div>
-                <div class="info-card"><i class="material-icons">people</i><span class="info-label">المسافرون</span><span class="info-value" id="pdf-pax">2 بالغين</span></div>
-                <div class="info-card"><i class="material-icons">event</i><span class="info-label">التاريخ</span><span class="info-value" id="pdf-date">مارس 2026</span></div>
+                <div class="info-card"><i class="material-icons">calendar_today</i><span class="info-label">تاريخ السفر</span><span class="info-value" id="pdf-date">مارس 2026</span></div>
+                <div class="info-card"><i class="material-icons">bed</i><span class="info-label">مدة الإقامة</span><span class="info-value" id="pdf-nights">10 ليالي</span></div>
+                <div class="info-card"><i class="material-icons">group</i><span class="info-label">عدد الأفراد</span><span class="info-value" id="pdf-pax">2 بالغين</span></div>
+                <div class="info-card"><i class="material-icons">stars</i><span class="info-label">نوع البرنامج</span><span class="info-value" id="pdf-program-type">برنامج خاص</span></div>
             </div>
             
-            <div class="offer-section" id="pdf-flights-section">
-                <div class="section-header"><div class="section-icon"><i class="material-icons">flight</i></div><h3 class="section-title">رحلات الطيران</h3></div>
+            <div class="section" id="pdf-flights-section">
+                <div class="section-header"><div class="section-icon"><i class="material-icons">flight_takeoff</i></div><h3 class="section-title">تفاصيل الطيران</h3></div>
                 <div id="pdf-flights-container"></div>
             </div>
             
-            <div class="offer-section" id="pdf-hotels-section">
+            <div class="section" id="pdf-hotels-section">
                 <div class="section-header"><div class="section-icon"><i class="material-icons">hotel</i></div><h3 class="section-title">الإقامة الفندقية</h3></div>
                 <div class="hotels-grid" id="pdf-hotels-container"></div>
             </div>
             
-            <div class="offer-section" id="pdf-car-section">
-                <div class="section-header"><div class="section-icon"><i class="material-icons">directions_car</i></div><h3 class="section-title">استئجار السيارات</h3></div>
+            <div class="section" id="pdf-car-section">
+                <div class="section-header"><div class="section-icon"><i class="material-icons">directions_car</i></div><h3 class="section-title">استئجار السيارة</h3></div>
                 <div id="pdf-car-container"></div>
             </div>
             
-            <div class="offer-section" id="pdf-program-section">
-                <div class="section-header"><div class="section-icon"><i class="material-icons">calendar_today</i></div><h3 class="section-title">البرنامج اليومي</h3></div>
-                <div class="timeline" id="pdf-program-container"></div>
-            </div>
-
-            <div class="offer-section" id="pdf-transport-section">
-                <div class="section-header"><div class="section-icon"><i class="material-icons">map</i></div><h3 class="section-title">خطة التنقلات</h3></div>
+            <div class="section" id="pdf-transport-section">
+                <div class="section-header"><div class="section-icon"><i class="material-icons">commute</i></div><h3 class="section-title">التنقلات</h3></div>
                 <table class="transfers-table">
-                    <thead><tr><th>من</th><th>إلى</th><th>التاريخ</th><th>الوقت</th><th>النوع</th></tr></thead>
+                    <thead><tr><th style="width: 50%">المسار</th><th style="width: 30%">وسيلة النقل</th><th style="width: 20%">التاريخ</th></tr></thead>
                     <tbody id="pdf-transport-container"></tbody>
                 </table>
             </div>
 
-            <div class="offer-section" id="pdf-includes-section">
-                <div class="section-header"><div class="section-icon"><i class="material-icons">list_alt</i></div><h3 class="section-title">تفاصيل الباقة</h3></div>
+            <div class="section" id="pdf-program-section">
+                <div class="section-header"><div class="section-icon"><i class="material-icons">map</i></div><h3 class="section-title">البرنامج السياحي</h3></div>
+                <div class="timeline" id="pdf-program-container"></div>
+            </div>
+
+            <div class="section" id="pdf-cost-section">
+                <div class="cost-card">
+                    <div class="total-label">التكلفة الإجمالية للرحلة</div>
+                    <div class="total-amount" id="pdf-price">4,500 ر.س</div>
+                    <div class="discount-badge" id="pdf-discount-badge">شامل خصم خاص</div>
+                </div>
+                <div style="text-align: center; color: var(--text-light); font-size: 14px;">
+                    منسق العرض: <strong style="color: var(--primary);" id="pdf-coordinator">جمال</strong>، استشاري قسم الحجوزات
+                </div>
+            </div>
+
+            <div class="section" id="pdf-includes-section">
                 <div class="inclusions-grid">
                     <div class="list-box">
-                        <h4><i class="material-icons" style="color:var(--accent-2)">check_circle</i>تشمل الباقة</h4>
-                        <ul id="pdf-includes-list"></ul>
+                        <h4><i class="material-icons" style="color:var(--primary)">check_circle</i> الباقة تشمل</h4>
+                        <ul id="pdf-includes-list" class="includes-list"></ul>
                     </div>
                     <div class="list-box">
-                        <h4><i class="material-icons" style="color:#f44336">cancel</i>لا تشمل</h4>
-                        <ul id="pdf-excludes-list" class="exclusions-list"></ul>
+                        <h4><i class="material-icons" style="color:var(--accent-2)">cancel</i> الباقة لا تشمل</h4>
+                        <ul id="pdf-excludes-list" class="excludes-list"></ul>
                     </div>
                 </div>
             </div>
-            
-            <div class="cost-card">
-                <div class="total-label">السعر الإجمالي للرحلة</div>
-                <div class="total-amount" id="pdf-price">4,500 ر.س</div>
-                <p>الأسعار قابلة للتغيير حسب التوفر</p>
+
+            <div class="section" id="pdf-policies-section">
+                <div class="section-header"><div class="section-icon"><i class="material-icons">gavel</i></div><h3 class="section-title">سياسات وملاحظات هامة</h3></div>
+                <div class="policies-grid" id="pdf-policies-container"></div>
+            </div>
+
+            <div class="section" id="pdf-payment-section">
+                <div class="section-header"><div class="section-icon"><i class="material-icons">account_balance_wallet</i></div><h3 class="section-title">طرق الدفع والحسابات البنكية</h3></div>
+                <div class="payment-grid">
+                    <div class="payment-item"><i class="material-icons">payment</i> فيزا</div>
+                    <div class="payment-item"><i class="material-icons">credit_card</i> ماستر كارد</div>
+                    <div class="payment-item"><i class="material-icons">account_balance</i> مدى</div>
+                    <div class="payment-item"><i class="material-icons">payment</i> تابي / تمارا</div>
+                </div>
+                <div id="pdf-bank-accounts"></div>
+            </div>
+
+            <div class="section terms-section">
+                <h4 style="color: #C53030; margin-bottom: 10px; display:flex; align-items:center; gap:8px;">
+                    <i class="material-icons">warning</i> تنبيه هام - الشروط العامة
+                </h4>
+                <ul class="terms-list" id="pdf-terms-list"></ul>
             </div>
         </div>
         
-        <div class="offer-footer">
+        <div class="footer-offer">
             <div class="footer-logo">
                 <img src="" alt="Logo" id="pdf-footer-logo">
             </div>
-            <p>شكراً لاختياركم شركة بوابات العالم للسفر والسياحة</p>
-            <p>نتمنى لكم رحلة سعيدة</p>
+            <p>بوابات العالم للسفر والسياحة</p>
+            <p style="font-size: 12px; color: #999;">World Gates For Travel & Tourism</p>
         </div>
     </div>
 
@@ -945,6 +1100,7 @@
             <div class="form-row"><div class="form-col"><label>من</label><input type="text" class="flight-from" value=""></div><div class="form-col"><label>إلى</label><input type="text" class="flight-to" value=""></div></div>
             <div class="form-row"><div class="form-col"><label>التاريخ</label><input type="text" class="flight-date" value=""></div><div class="form-col"><label>الخطوط</label><input type="text" class="airline" value=""></div></div>
             <div class="form-row"><div class="form-col"><label>مغادرة</label><input type="text" class="departure-time" value=""></div><div class="form-col"><label>وصول</label><input type="text" class="arrival-time" value=""></div></div>
+            <div class="form-group"><label>نوع الرحلة</label><input type="text" class="flight-type" value="مباشر"></div>
             <button class="btn btn-remove" onclick="removeSection('flight-section-${id}', 'flights-container')"><i class="material-icons">delete</i>حذف</button>`;
 
         const getHotelTemplate = (id) => `
@@ -957,8 +1113,9 @@
         const getCarTemplate = (id) => `
             <div class="section-title"><i class="material-icons">directions_car</i>معلومات السيارة</div>
             <div class="form-row"><div class="form-col"><label>نوع السيارة</label><input type="text" class="car-type" value=""></div><div class="form-col"><label>تاريخ الاستئجار</label><input type="text" class="rental-dates" value=""></div></div>
-            <div class="form-row"><div class="form-col"><label>التأمين الشامل</label><select class="insurance"><option value="yes" selected>نعم</option><option value="no">لا</option></select></div><div class="form-col"><label>سائق إضافي</label><select class="additional-driver"><option value="yes">نعم</option><option value="no" selected>لا</option></select></div></div>
-            <div class="form-group"><label>ملاحظات</label><textarea class="car-notes" rows="2"></textarea></div>
+            <div class="form-row"><div class="form-col"><label>موديل السيارة</label><input type="text" class="car-model" value=""></div><div class="form-col"><label>مدة الإيجار</label><input type="text" class="rental-duration" value=""></div></div>
+            <div class="form-row"><div class="form-col"><label>استلام السيارة</label><input type="text" class="pickup-location" value=""></div><div class="form-col"><label>تسليم السيارة</label><input type="text" class="dropoff-location" value=""></div></div>
+            <div class="form-group"><label>المشمولات</label><textarea class="car-inclusions" rows="2"></textarea></div>
             <button class="btn btn-remove" onclick="removeSection('car-section-${id}', 'car-container')"><i class="material-icons">delete</i>حذف</button>`;
 
         const getProgramTemplate = (id) => `
@@ -970,8 +1127,7 @@
         const getTransportTemplate = (id) => `
             <div class="section-title"><i class="material-icons">map</i>تنقل</div>
             <div class="form-row"><div class="form-col"><label>من</label><input type="text" class="transport-from" value=""></div><div class="form-col"><label>إلى</label><input type="text" class="transport-to" value=""></div></div>
-            <div class="form-row"><div class="form-col"><label>تاريخ</label><input type="text" class="transport-date" value=""></div><div class="form-col"><label>وقت</label><input type="text" class="transport-time" value=""></div></div>
-            <div class="form-group"><label>النوع</label><input type="text" class="transport-type" value=""></div>
+            <div class="form-row"><div class="form-col"><label>التاريخ</label><input type="text" class="transport-date" value=""></div><div class="form-col"><label>وسيلة النقل</label><input type="text" class="transport-method" value=""></div></div>
             <button class="btn btn-remove" onclick="removeSection('transport-section-${id}', 'transport-container')"><i class="material-icons">delete</i>حذف</button>`;
 
         // Specific Adds for Includes/Excludes
@@ -1040,6 +1196,22 @@
             data.transportSections = document.getElementById('transport-container').innerHTML;
             data.includeSections = document.getElementById('includes-container').innerHTML;
             data.excludeSections = document.getElementById('excludes-container').innerHTML;
+            data.policiesHotels = document.querySelector('.policy-hotels').value;
+            data.policiesFlights = document.querySelector('.policy-flights').value;
+            data.policiesWeight = document.querySelector('.policy-weight').value;
+            data.policiesAirport = document.querySelector('.policy-airport').value;
+            data.generalTerms = document.querySelector('.general-terms').value;
+            data.beneficiary = document.getElementById('beneficiary').value;
+            data.bankAccounts = [];
+            
+            // Save bank accounts
+            const bankSections = document.querySelectorAll('#payment .form-section');
+            bankSections.forEach(section => {
+                const bankName = section.querySelector('.section-title').textContent;
+                const accountNumber = section.querySelector('.bank-account').value;
+                const iban = section.querySelector('.bank-iban').value;
+                data.bankAccounts.push({ bankName, accountNumber, iban });
+            });
 
             let records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
             records.push(data);
@@ -1095,6 +1267,14 @@
             document.getElementById('includes-container').innerHTML = rec.includeSections;
             document.getElementById('excludes-container').innerHTML = rec.excludeSections;
             
+            // Restore policies
+            if (rec.policiesHotels) document.querySelector('.policy-hotels').value = rec.policiesHotels;
+            if (rec.policiesFlights) document.querySelector('.policy-flights').value = rec.policiesFlights;
+            if (rec.policiesWeight) document.querySelector('.policy-weight').value = rec.policiesWeight;
+            if (rec.policiesAirport) document.querySelector('.policy-airport').value = rec.policiesAirport;
+            if (rec.generalTerms) document.querySelector('.general-terms').value = rec.generalTerms;
+            if (rec.beneficiary) document.getElementById('beneficiary').value = rec.beneficiary;
+            
             // Re-attach image listeners logic would be complex here, simplified for demo
             alert('تم تحميل العرض');
             document.querySelector('[data-tab="basic"]').click();
@@ -1133,13 +1313,15 @@
                 
                 // 2. Populate Template Data
                 const dest = document.getElementById('destination').value;
-                document.getElementById('pdf-destination-title').textContent = `اكتشف جمال ${dest}`;
+                document.getElementById('pdf-destination-title').textContent = `برنامج خاص ل${document.getElementById('client-name').value}`;
                 document.getElementById('pdf-subtitle').textContent = document.getElementById('cities').value;
                 document.getElementById('pdf-nights').textContent = document.getElementById('nights-count').value + ' ليالي';
-                document.getElementById('pdf-dest').textContent = dest;
-                document.getElementById('pdf-pax').textContent = document.getElementById('adults-count').value + ' بالغين';
                 document.getElementById('pdf-date').textContent = document.getElementById('travel-date').value;
-                document.getElementById('pdf-price').textContent = document.getElementById('total-price').value + ' ' + (document.getElementById('currency').value === 'SAR' ? 'ر.س' : '$');
+                document.getElementById('pdf-pax').textContent = document.getElementById('adults-count').value + ' بالغين';
+                document.getElementById('pdf-program-type').textContent = document.getElementById('program-type').value;
+                document.getElementById('pdf-price').textContent = document.getElementById('total-price').value + ' ' + (document.getElementById('currency').value === 'SAR' ? 'ريال' : 'دولار');
+                document.getElementById('pdf-discount-badge').textContent = document.getElementById('discount-badge').value;
+                document.getElementById('pdf-coordinator').textContent = document.getElementById('coordinator').value;
 
                 // Header Image
                 const mainPreview = document.querySelector('#main-image-preview img');
@@ -1160,14 +1342,17 @@
                         const air = sec.querySelector('.airline').value;
                         const dep = sec.querySelector('.departure-time').value;
                         const arr = sec.querySelector('.arrival-time').value;
+                        const type = sec.querySelector('.flight-type').value;
+                        const icon = from.includes('جدة') || from.includes('RUH') ? 'flight_takeoff' : 'flight_land';
                         flightCont.innerHTML += `
                             <div class="flight-card">
-                                <div class="flight-icon-box"><i class="material-icons">flight</i></div>
+                                <div class="flight-icon-box"><i class="material-icons">${icon}</i></div>
                                 <div class="flight-details">
-                                    <div class="flight-main-info"><span class="flight-route">${from} - ${to}</span><span class="flight-date">${date}</span></div>
+                                    <div class="flight-main-info"><span class="flight-route">${from} ← ${to}</span><span class="flight-date">${date}</span></div>
                                     <div class="flight-meta">
-                                        <span><i class="material-icons" style="font-size:16px">airlines</i> ${air}</span>
+                                        <span><i class="material-icons" style="font-size:16px">business</i> ${air}</span>
                                         <span><i class="material-icons" style="font-size:16px">schedule</i> ${dep} - ${arr}</span>
+                                        <span><i class="material-icons" style="font-size:16px">swap_horiz</i> ${type}</span>
                                     </div>
                                 </div>
                             </div>`;
@@ -1193,8 +1378,8 @@
                                 <img src="${imgSrc}" class="hotel-image">
                                 <div class="hotel-content">
                                     <div class="hotel-dates">${dates}</div>
-                                    <h4 class="hotel-name">${name} - ${city}</h4>
-                                    <div class="hotel-room"><i class="material-icons" style="font-size:16px">bed</i> ${room}</div>
+                                    <div class="hotel-name">${name}</div>
+                                    <div class="hotel-room"><i class="material-icons" style="font-size:16px">king_bed</i> ${room}</div>
                                 </div>
                             </div>`;
                     });
@@ -1210,21 +1395,27 @@
                     document.querySelectorAll('.car-section').forEach(sec => {
                         const type = sec.querySelector('.car-type').value;
                         const dates = sec.querySelector('.rental-dates').value;
-                        const insurance = sec.querySelector('.insurance').value === 'yes' ? 'مشمل' : 'غير مشمول';
-                        const driver = sec.querySelector('.additional-driver').value === 'yes' ? 'متوفر' : 'غير متوفر';
-                        const notes = sec.querySelector('.car-notes').value;
+                        const model = sec.querySelector('.car-model').value;
+                        const duration = sec.querySelector('.rental-duration').value;
+                        const pickup = sec.querySelector('.pickup-location').value;
+                        const dropoff = sec.querySelector('.dropoff-location').value;
+                        const inclusions = sec.querySelector('.car-inclusions').value;
                         carCont.innerHTML += `
                             <div class="car-card">
                                 <div class="car-header">
-                                    <span>${type}</span>
-                                    <i class="material-icons">directions_car</i>
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <i class="material-icons">time_to_leave</i>
+                                        <span style="font-weight:700; font-size:18px;">تفاصيل السيارة</span>
+                                    </div>
+                                    <span style="background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:20px; font-size:12px;">مدة الإيجار: ${duration}</span>
                                 </div>
                                 <table class="car-table">
-                                    <tr><th>تاريخ الاستئجار</th><td>${dates}</td></tr>
-                                    <tr><th>التأمين الشامل</th><td>${insurance}</td></tr>
-                                    <tr><th>سائق إضافي</th><td>${driver}</td></tr>
+                                    <tr><th>نوع السيارة</th><td>${type}</td></tr>
+                                    <tr><th>موديل السيارة</th><td>${model}</td></tr>
+                                    <tr><th>استلام السيارة</th><td>${pickup}</td></tr>
+                                    <tr><th>تسليم السيارة</th><td>${dropoff}</td></tr>
+                                    <tr><th>المشمولات</th><td>${inclusions}</td></tr>
                                 </table>
-                                ${notes ? `<div style="padding: 0.75rem 1.25rem; font-size: 0.875rem;">${notes}</div>` : ''}
                             </div>`;
                     });
                 }
@@ -1239,11 +1430,11 @@
                     document.querySelectorAll('.program-section').forEach(sec => {
                         const title = sec.querySelector('.program-title').value;
                         const acts = Array.from(sec.querySelectorAll('.activity')).map(i => i.value).filter(v=>v);
-                        let actsHtml = acts.map(a => `<div class="activity-tag"><i class="material-icons">check_circle_outline</i> ${a}</div>`).join('');
+                        let actsHtml = acts.map(a => `<div class="activity-tag"><i class="material-icons">directions_car</i> ${a}</div>`).join('');
                         progCont.innerHTML += `
                             <div class="timeline-item">
                                 <div class="timeline-dot"></div>
-                                <h4 class="timeline-day-title">${title}</h4>
+                                <h4 class="timeline-day-title"><i class="material-icons" style="color:var(--accent-2)">location_on</i> ${title}</h4>
                                 <div class="timeline-content">${actsHtml}</div>
                             </div>`;
                     });
@@ -1258,11 +1449,15 @@
                 if(transToggle) {
                     document.querySelectorAll('.transport-section').forEach(sec => {
                         const row = `<tr>
-                            <td>${sec.querySelector('.transport-from').value}</td>
-                            <td>${sec.querySelector('.transport-to').value}</td>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <span class="trans-icon">من:</span> ${sec.querySelector('.transport-from').value}
+                                    <i class="material-icons" style="font-size:14px; color:var(--text-light)">arrow_back</i>
+                                    <span class="trans-icon">إلى:</span> ${sec.querySelector('.transport-to').value}
+                                </div>
+                            </td>
+                            <td>${sec.querySelector('.transport-method').value}</td>
                             <td>${sec.querySelector('.transport-date').value}</td>
-                            <td>${sec.querySelector('.transport-time').value}</td>
-                            <td>${sec.querySelector('.transport-type').value}</td>
                         </tr>`;
                         transBody.innerHTML += row;
                     });
@@ -1272,8 +1467,110 @@
                 const incList = document.getElementById('pdf-includes-list');
                 const excList = document.getElementById('pdf-excludes-list');
                 incList.innerHTML = ''; excList.innerHTML = '';
-                document.querySelectorAll('.include-text').forEach(inp => { if(inp.value) incList.innerHTML += `<li>${inp.value}</li>`; });
-                document.querySelectorAll('.exclude-text').forEach(inp => { if(inp.value) excList.innerHTML += `<li>${inp.value}</li>`; });
+                document.querySelectorAll('.include-text').forEach(inp => { 
+                    if(inp.value) incList.innerHTML += `<li><i class="material-icons">check</i> ${inp.value}</li>`; 
+                });
+                document.querySelectorAll('.exclude-text').forEach(inp => { 
+                    if(inp.value) excList.innerHTML += `<li><i class="material-icons">close</i> ${inp.value}</li>`; 
+                });
+
+                // Policies
+                const policiesCont = document.getElementById('pdf-policies-container');
+                policiesCont.innerHTML = '';
+                
+                // Hotels Policy
+                const hotelsPolicy = document.querySelector('.policy-hotels').value;
+                if(hotelsPolicy) {
+                    policiesCont.innerHTML += `
+                        <div class="policy-card">
+                            <div class="policy-header"><i class="material-icons">hotel</i><h4>الفنادق</h4></div>
+                            <div class="policy-body">
+                                <ul class="policy-list">
+                                    ${hotelsPolicy.split('\n').map(line => line.trim() ? `<li>${line}</li>` : '').join('')}
+                                </ul>
+                            </div>
+                        </div>`;
+                }
+                
+                // Flights Policy
+                const flightsPolicy = document.querySelector('.policy-flights').value;
+                if(flightsPolicy) {
+                    policiesCont.innerHTML += `
+                        <div class="policy-card">
+                            <div class="policy-header"><i class="material-icons">flight</i><h4>الطيران</h4></div>
+                            <div class="policy-body">
+                                <ul class="policy-list">
+                                    ${flightsPolicy.split('\n').map(line => line.trim() ? `<li>${line}</li>` : '').join('')}
+                                </ul>
+                            </div>
+                        </div>`;
+                }
+                
+                // Weight Policy
+                const weightPolicy = document.querySelector('.policy-weight').value;
+                if(weightPolicy) {
+                    policiesCont.innerHTML += `
+                        <div class="policy-card">
+                            <div class="policy-header"><i class="material-icons">luggage</i><h4>الوزن المسموح به</h4></div>
+                            <div class="policy-body">
+                                <ul class="policy-list">
+                                    ${weightPolicy.split('\n').map(line => line.trim() ? `<li>${line}</li>` : '').join('')}
+                                </ul>
+                            </div>
+                        </div>`;
+                }
+                
+                // Airport Policy
+                const airportPolicy = document.querySelector('.policy-airport').value;
+                if(airportPolicy) {
+                    policiesCont.innerHTML += `
+                        <div class="policy-card">
+                            <div class="policy-header"><i class="material-icons">schedule</i><h4>مواعيد الحضور إلى المطار</h4></div>
+                            <div class="policy-body">
+                                <ul class="policy-list">
+                                    ${airportPolicy.split('\n').map(line => line.trim() ? `<li>${line}</li>` : '').join('')}
+                                </ul>
+                            </div>
+                        </div>`;
+                }
+
+                // Payment Methods
+                const bankAccountsCont = document.getElementById('pdf-bank-accounts');
+                bankAccountsCont.innerHTML = '';
+                const beneficiary = document.getElementById('beneficiary').value;
+                
+                // Get all bank accounts
+                const bankSections = document.querySelectorAll('#payment .form-section');
+                bankSections.forEach(section => {
+                    const bankName = section.querySelector('.section-title').textContent;
+                    const accountNumber = section.querySelector('.bank-account').value;
+                    const iban = section.querySelector('.bank-iban').value;
+                    
+                    bankAccountsCont.innerHTML += `
+                        <div class="bank-card">
+                            <div class="bank-header"><i class="material-icons" style="margin-left:8px;">account_balance</i> ${bankName}</div>
+                            <div class="bank-info-row">
+                                <span class="bank-info-label">رقم الحساب</span>
+                                <span class="bank-info-value">${accountNumber}</span>
+                            </div>
+                            <div class="bank-info-row">
+                                <span class="bank-info-label">الآيبان</span>
+                                <span class="bank-info-value">${iban}</span>
+                            </div>
+                            ${section.querySelector('.section-title').textContent.includes('SAB') ? 
+                                `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee; font-size: 13px; color: var(--primary); font-weight: 600;">
+                                    المستفيد: ${beneficiary}
+                                </div>` : ''}
+                        </div>`;
+                });
+
+                // General Terms
+                const termsList = document.getElementById('pdf-terms-list');
+                termsList.innerHTML = '';
+                const generalTerms = document.querySelector('.general-terms').value;
+                if(generalTerms) {
+                    termsList.innerHTML = generalTerms.split('\n').map(line => line.trim() ? `<li>${line}</li>` : '').join('');
+                }
 
                 // 4. Render PDF
                 const template = document.getElementById('offer-template');
