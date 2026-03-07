@@ -787,6 +787,24 @@
     <div class="tab-content active" id="basic">
         <div class="card">
             <div class="card-header">
+                <div class="card-title"><i class="material-icons">business</i>شعار الشركة</div>
+            </div>
+            <div class="upload-zone">
+                <div class="img-thumb" id="company-logo-preview">
+                    <img src="" alt="logo" id="company-logo-img" style="height:60px;object-fit:contain;border-radius:8px;">
+                </div>
+                <div class="upload-btn-wrap">
+                    <label class="upload-btn" onclick="document.getElementById('company-logo-input').click()">
+                        <i class="material-icons">cloud_upload</i> تغيير شعار الشركة
+                        <input type="file" id="company-logo-input" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
+                    </label>
+                    <p class="upload-hint">الشعار يظهر في أعلى PDF والفوتر</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
                 <div class="card-title"><i class="material-icons">image</i>صورة الغلاف</div>
             </div>
             <div class="upload-zone">
@@ -1575,6 +1593,24 @@ window.deleteRecord = i => {
 };
 
 loadRecordsList();
+// ===================== DEFAULT COMPANY LOGO =====================
+        const DEFAULT_LOGO = 'data:image/png;base64,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';
+        // Auto-set logo on load
+        (function() {
+            const logoImg = document.getElementById('company-logo-img');
+            if (logoImg) logoImg.src = DEFAULT_LOGO;
+        })();
+
+        function handleLogoUpload(input) {
+            if (!input.files || !input.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const logoImg = document.getElementById('company-logo-img');
+                if (logoImg) logoImg.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
 // ===================== PDF GENERATION =====================
         document.getElementById('download-offer-btn').onclick = async () => {
             const loading = document.getElementById('loading-overlay');
@@ -1583,8 +1619,8 @@ loadRecordsList();
                 await document.fonts.ready;
 
                 // Logo / company
-                const logoPreview = document.querySelector('#company-logo-preview img');
-                const logoSrc = logoPreview ? logoPreview.src : '';
+                const logoImg2 = document.getElementById('company-logo-img');
+                const logoSrc = (logoImg2 && logoImg2.src && logoImg2.src !== window.location.href) ? logoImg2.src : DEFAULT_LOGO;
                 ['pdf-logo-img','pdf-footer-logo'].forEach(id => document.getElementById(id).src = logoSrc);
                 const companyName = document.getElementById('beneficiary').value || 'بوابات العالم للسفر والسياحة';
                 ['pdf-company-name','pdf-footer-co'].forEach(id => document.getElementById(id).textContent = companyName);
