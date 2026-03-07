@@ -521,6 +521,14 @@
             .app-bar-actions .btn-ghost span:not(.material-icons) { display: none; }
         }
 
+        /* ===== HOTEL LINK ===== */
+        .link-input-wrap { display:flex; align-items:center; gap:6px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:4px 8px; }
+        .link-input-wrap .link-icon { color:var(--accent); font-size:18px; flex-shrink:0; }
+        .link-input-wrap .hotel-url { flex:1; background:transparent; border:none; outline:none; color:var(--text); font-family:'Tajawal',sans-serif; font-size:0.875rem; direction:ltr; }
+        .link-input-wrap .hotel-url::placeholder { color:var(--text-secondary); }
+        .link-open-btn { background:var(--accent); color:white; border:none; border-radius:7px; padding:5px 8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:opacity .2s; }
+        .link-open-btn:hover { opacity:.85; }
+        .link-open-btn .material-icons { font-size:16px; }
         /* ====================================================
            PDF OFFER TEMPLATE — بوابات العالم Style
         ==================================================== */
@@ -641,6 +649,7 @@
         }
         .ot-hotel-name { font-size:15px; font-weight:700; margin-bottom:4px; }
         .ot-hotel-room { font-size:12px; color:#718096; display:flex; align-items:center; gap:4px; }
+        .ot-hotel-link { display:inline-block; margin-top:7px; padding:4px 12px; background:#FF6B35; color:white; border-radius:14px; font-size:11px; font-weight:700; text-decoration:none; }
         .ot-hotel-room .material-icons { font-size:13px; }
         /* Car */
         .ot-car { background:#F4F6F8; border-radius:13px; overflow:hidden; border:1px solid #e0e0e0; margin-bottom:12px; }
@@ -722,6 +731,17 @@
         .ot-terms li::before { content:"•"; color:#FF6B35; position:absolute; right:0; }
         /* Footer */
         .ot-footer { background:#F4F6F8; padding:22px; text-align:center; }
+
+        /* Page break helpers */
+        .ot-section { page-break-inside: avoid; }
+        .ot-hotel   { page-break-inside: avoid; }
+        .ot-flight  { page-break-inside: avoid; }
+        .ot-tl-item { page-break-inside: avoid; }
+        .ot-policy  { page-break-inside: avoid; }
+        .ot-bank    { page-break-inside: avoid; }
+        .ot-cost-card { page-break-inside: avoid; }
+        .ot-inc-grid  { page-break-inside: avoid; }
+        .ot-terms     { page-break-inside: avoid; }
         .ot-footer img { height:48px; opacity:.9; margin-bottom:9px; display:block; margin-left:auto; margin-right:auto; }
         .ot-footer-name { font-size:14px; font-weight:700; color:#1A2536; margin-bottom:2px; }
         .ot-footer-sub { font-size:11px; color:#718096; }
@@ -921,6 +941,16 @@
                     <div class="form-group"><label>المدينة</label><input type="text" class="hotel-city" value="تيبليسي"></div>
                     <div class="form-group"><label>تاريخ الإقامة</label><input type="text" class="hotel-dates" value="15 - 18 مارس (3 ليالي)"></div>
                     <div class="form-group"><label>نوع الغرفة</label><input type="text" class="room-type" value="جناح ملكي"></div>
+                    <div class="form-group span-2">
+                        <label>رابط الموقع الرسمي للفندق</label>
+                        <div class="link-input-wrap">
+                            <i class="material-icons link-icon">link</i>
+                            <input type="text" class="hotel-url" placeholder="https://...">
+                            <button type="button" class="link-open-btn" onclick="openHotelLink(this)" title="فتح الرابط">
+                                <i class="material-icons">open_in_new</i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1301,8 +1331,11 @@ async function handleImageUpload(input, previewId, maxW = 900) {
     try {
         const src = await compressImage(input.files[0], maxW);
         const preview = document.getElementById(previewId);
-        preview.innerHTML = `<img src="${src}" alt="preview" style="width:100%;height:100%;object-fit:cover;">`;
+        preview.innerHTML = `<img src="${src}" alt="preview" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`;
+        // Store on both the input dataset and the preview img for reliable PDF retrieval
         input.dataset.compressedSrc = src;
+        const img = preview.querySelector('img');
+        if (img) img.dataset.src = src;
     } catch(e) { console.error(e); }
 }
 
@@ -1625,11 +1658,18 @@ loadRecordsList();
                 const companyName = document.getElementById('beneficiary').value || 'بوابات العالم للسفر والسياحة';
                 ['pdf-company-name','pdf-footer-co'].forEach(id => document.getElementById(id).textContent = companyName);
 
-                // Header background (first hotel image or fallback)
-                const firstHotelImg = document.querySelector('.hotel-section .img-thumb img');
-                document.getElementById('pdf-header-img').src = firstHotelImg
-                    ? firstHotelImg.src
-                    : 'https://images.unsplash.com/photo-1568781269783-e69b164ad26e?w=1200&q=80';
+                // Header background: main cover image > first hotel image > fallback
+                const mainCoverImg  = document.querySelector('#main-image-preview img');
+                const mainInput     = document.getElementById('main-image-input');
+                const mainSrc       = (mainInput && mainInput.dataset.compressedSrc)
+                                        || (mainCoverImg && mainCoverImg.src && mainCoverImg.src.startsWith('data:') ? mainCoverImg.src : null);
+                const firstHotelInput = document.querySelector('.hotel-section input[type="file"]');
+                const firstHotelPrev  = document.querySelector('[id^="hotel-preview-"] img');
+                const firstHotelSrc   = (firstHotelInput && firstHotelInput.dataset.compressedSrc)
+                                        || (firstHotelPrev && firstHotelPrev.src && firstHotelPrev.src.startsWith('data:') ? firstHotelPrev.src : null);
+                document.getElementById('pdf-header-img').src =
+                    mainSrc || firstHotelSrc ||
+                    'https://images.unsplash.com/photo-1568781269783-e69b164ad26e?w=1200&q=80';
 
                 // Basic info
                 const clientName = document.getElementById('client-name').value;
@@ -1684,19 +1724,40 @@ loadRecordsList();
                 const hotelsCont = document.getElementById('pdf-hotels');
                 hotelsCont.innerHTML = '';
                 if (hotelOn) {
+                    const HOTEL_FALLBACKS = [
+                        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80',
+                        'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&q=80',
+                        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=80',
+                        'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400&q=80',
+                    ];
+                    let hCount = 0;
                     document.querySelectorAll('.hotel-section').forEach(sec => {
                         const name   = sec.querySelector('.hotel-name')?.value  || '';
                         const city   = sec.querySelector('.hotel-city')?.value  || '';
                         const dates  = sec.querySelector('.hotel-dates')?.value || '';
                         const room   = sec.querySelector('.room-type')?.value   || '';
-                        const imgEl  = sec.querySelector('.img-thumb img');
-                        const imgSrc = imgEl ? imgEl.src : 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=300&q=80';
+                        const url    = (sec.querySelector('.hotel-url')?.value  || '').trim();
+                        // Check img-thumb preview div (the small 60x60 one) for uploaded image
+                        const previewDiv = sec.querySelector('[id^="hotel-preview-"]');
+                        const previewImg = previewDiv ? previewDiv.querySelector('img') : null;
+                        // Check all storage locations for uploaded image
+                        const fileInput  = sec.querySelector('input[type="file"]');
+                        const compressed = fileInput ? fileInput.dataset.compressedSrc : null;
+                        const imgDataSrc = previewImg ? (previewImg.dataset.src || '') : '';
+                        const imgSrcAttr = (previewImg && previewImg.src && previewImg.src.startsWith('data:')) ? previewImg.src : null;
+                        const uploadedSrc = compressed || imgDataSrc || imgSrcAttr || null;
+                        const imgSrc = uploadedSrc || HOTEL_FALLBACKS[hCount % HOTEL_FALLBACKS.length];
+                        hCount++;
+                        const linkHtml = url
+                            ? '<a href="' + url + '" class="ot-hotel-link">&#x1F517; زيارة الفندق</a>'
+                            : '';
                         hotelsCont.innerHTML += '<div class="ot-hotel">'
-                            + '<img src="' + imgSrc + '" class="ot-hotel-img" alt="' + name + '">'
+                            + '<img src="' + imgSrc + '" class="ot-hotel-img" alt="' + name + '" crossorigin="anonymous">'
                             + '<div class="ot-hotel-body">'
                             + '<div class="ot-hotel-dates">' + dates + '</div>'
                             + '<div class="ot-hotel-name">' + name + (city ? ' &mdash; ' + city : '') + '</div>'
                             + '<div class="ot-hotel-room"><i class="material-icons">king_bed</i>' + room + '</div>'
+                            + linkHtml
                             + '</div></div>';
                     });
                 }
@@ -1828,11 +1889,18 @@ loadRecordsList();
                 template.style.position  = 'fixed';
                 template.style.left      = '-9999px';
                 template.style.top       = '0';
+                template.style.width     = '794px';
 
-                await new Promise(res => setTimeout(res, 900));
+                await new Promise(res => setTimeout(res, 1200));
 
+                const { jsPDF } = window.jspdf;
+                const pdf  = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
+                const pdfW = pdf.internal.pageSize.getWidth();   // 210mm
+                const pdfH = pdf.internal.pageSize.getHeight();  // 297mm
+
+                // Render full template as one tall canvas
                 const canvas = await html2canvas(template, {
-                    scale: 3,
+                    scale: 2,
                     useCORS: true,
                     allowTaint: true,
                     logging: false,
@@ -1844,27 +1912,43 @@ loadRecordsList();
                         ct.style.display  = 'block';
                         ct.style.position = 'static';
                         ct.style.left     = '0';
+                        ct.style.width    = '794px';
                     }
                 });
 
                 template.style.display = 'none';
 
-                const { jsPDF } = window.jspdf;
-                const pdf  = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
-                const pdfW = pdf.internal.pageSize.getWidth();
-                const pdfH = pdf.internal.pageSize.getHeight();
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                const imgH    = (canvas.height * pdfW) / canvas.width;
+                // Split canvas into A4 pages cleanly
+                const imgData    = canvas.toDataURL('image/jpeg', 0.92);
+                const canvasW    = canvas.width;
+                const canvasH    = canvas.height;
+                // px per mm (canvas pixels per pdf mm)
+                const pxPerMm    = canvasW / pdfW;
+                const pageHpx    = Math.floor(pdfH * pxPerMm);  // canvas px per A4 page
 
-                let heightLeft = imgH;
-                let pos        = 0;
-                pdf.addImage(imgData, 'JPEG', 0, pos, pdfW, imgH, '', 'FAST');
-                heightLeft -= pdfH;
-                while (heightLeft > 1) {
-                    pos -= pdfH;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'JPEG', 0, pos, pdfW, imgH, '', 'FAST');
-                    heightLeft -= pdfH;
+                let yOffset = 0;
+                let pageNum = 0;
+
+                while (yOffset < canvasH) {
+                    // Height of this slice (last page may be shorter)
+                    const sliceH = Math.min(pageHpx, canvasH - yOffset);
+
+                    // Create a slice canvas
+                    const pageCanvas = document.createElement('canvas');
+                    pageCanvas.width  = canvasW;
+                    pageCanvas.height = pageHpx; // always full A4 height
+                    const ctx = pageCanvas.getContext('2d');
+                    ctx.fillStyle = '#E5E5E5';
+                    ctx.fillRect(0, 0, canvasW, pageHpx);
+                    ctx.drawImage(canvas, 0, yOffset, canvasW, sliceH, 0, 0, canvasW, sliceH);
+
+                    const sliceData = pageCanvas.toDataURL('image/jpeg', 0.92);
+
+                    if (pageNum > 0) pdf.addPage();
+                    pdf.addImage(sliceData, 'JPEG', 0, 0, pdfW, pdfH, '', 'FAST');
+
+                    yOffset += pageHpx;
+                    pageNum++;
                 }
 
                 const fname = document.getElementById('client-name').value.replace(/\s+/g, '_');
