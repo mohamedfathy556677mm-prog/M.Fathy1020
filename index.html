@@ -733,7 +733,18 @@
         .ot-footer { background:#F4F6F8; padding:22px; text-align:center; }
 
         /* Page break helpers */
-        .ot-section { page-break-inside: avoid; }
+        .ot-section  { page-break-inside: avoid; break-inside: avoid; }
+        .ot-hotel    { page-break-inside: avoid; break-inside: avoid; }
+        .ot-flight   { page-break-inside: avoid; break-inside: avoid; }
+        .ot-tl-item  { page-break-inside: avoid; break-inside: avoid; }
+        .ot-policy   { page-break-inside: avoid; break-inside: avoid; }
+        .ot-bank     { page-break-inside: avoid; break-inside: avoid; }
+        .ot-cost-card{ page-break-inside: avoid; break-inside: avoid; }
+        .ot-inc-grid { page-break-inside: avoid; break-inside: avoid; }
+        .ot-terms    { page-break-inside: avoid; break-inside: avoid; }
+        /* Ensure sections breathe so breaks don't clip text */
+        .ot-content  { padding-bottom: 20px; }
+        .ot-section  { margin-bottom: 28px; padding-bottom: 4px; }
         .ot-hotel   { page-break-inside: avoid; }
         .ot-flight  { page-break-inside: avoid; }
         .ot-tl-item { page-break-inside: avoid; }
@@ -1883,7 +1894,7 @@ loadRecordsList();
                     termsList.innerHTML += '<li>' + l + '</li>';
                 });
 
-                // Render with html2canvas
+                // ===== RENDER PDF WITH SMART PAGE BREAKS =====
                 const template = document.getElementById('offer-template');
                 template.style.display   = 'block';
                 template.style.position  = 'fixed';
@@ -1897,10 +1908,62 @@ loadRecordsList();
                 const pdf  = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
                 const pdfW = pdf.internal.pageSize.getWidth();   // 210mm
                 const pdfH = pdf.internal.pageSize.getHeight();  // 297mm
+                const SCALE = 2.5;
 
-                // Render full template as one tall canvas
-                const canvas = await html2canvas(template, {
-                    scale: 2,
+                // Collect break-safe elements — sections that should not be split
+                const breakElements = template.querySelectorAll(
+                    '.ot-section, .ot-hotel, .ot-flight, .ot-tl-item, ' +
+                    '.ot-policy, .ot-bank, .ot-cost-card, .ot-inc-grid, ' +
+                    '.ot-terms, .ot-overview, .ot-footer, .ot-header, .ot-content'
+                );
+
+                // Find safe Y positions (bottom of each element relative to template top)
+                // We'll use these to decide where to cut pages
+                const templateRect = template.getBoundingClientRect();
+                const safeBreaks = [0]; // always start at 0
+                breakElements.forEach(el => {
+                    const r = el.getBoundingClientRect();
+                    const elBottom = r.bottom - templateRect.top;
+                    const elTop    = r.top    - templateRect.top;
+                    // Record both top and bottom as potential break points
+                    safeBreaks.push(elTop);
+                    safeBreaks.push(elBottom);
+                });
+                safeBreaks.push(template.scrollHeight);
+
+                // Remove duplicates and sort
+                const uniqueBreaks = [...new Set(safeBreaks.map(v => Math.round(v)))].sort((a,b) => a-b);
+
+                // Page height in px (template is 794px wide = 210mm, so 1px = 210/794 mm)
+                const pxPerMm   = 794 / pdfW;       // template px per pdf mm
+                const pageHpx   = pdfH * pxPerMm;   // one A4 page height in template px
+
+                // Build page slices: find safe cut points near multiples of pageHpx
+                const pageStarts = [0];
+                let cursor = 0;
+                while (cursor < template.scrollHeight) {
+                    const idealCut = cursor + pageHpx;
+                    if (idealCut >= template.scrollHeight) break;
+
+                    // Find the safe break point closest to (and not exceeding) idealCut
+                    // Prefer a break BEFORE the ideal cut to avoid splitting content
+                    let bestBreak = cursor + 10; // fallback: at least move forward
+                    for (const bp of uniqueBreaks) {
+                        if (bp > cursor + pageHpx * 0.3 && bp <= idealCut + pageHpx * 0.15) {
+                            bestBreak = bp;
+                        }
+                    }
+                    // If no good break found, use idealCut (hard cut)
+                    if (bestBreak <= cursor) bestBreak = idealCut;
+
+                    pageStarts.push(Math.round(bestBreak));
+                    cursor = Math.round(bestBreak);
+                }
+                pageStarts.push(template.scrollHeight);
+
+                // Render full template canvas
+                const fullCanvas = await html2canvas(template, {
+                    scale: SCALE,
                     useCORS: true,
                     allowTaint: true,
                     logging: false,
@@ -1918,37 +1981,33 @@ loadRecordsList();
 
                 template.style.display = 'none';
 
-                // Split canvas into A4 pages cleanly
-                const imgData    = canvas.toDataURL('image/jpeg', 0.92);
-                const canvasW    = canvas.width;
-                const canvasH    = canvas.height;
-                // px per mm (canvas pixels per pdf mm)
-                const pxPerMm    = canvasW / pdfW;
-                const pageHpx    = Math.floor(pdfH * pxPerMm);  // canvas px per A4 page
+                const canvasW = fullCanvas.width;  // 794 * SCALE
 
-                let yOffset = 0;
-                let pageNum = 0;
+                // Slice and add pages
+                for (let i = 0; i < pageStarts.length - 1; i++) {
+                    const yStart  = Math.round(pageStarts[i]   * SCALE);
+                    const yEnd    = Math.round(pageStarts[i+1] * SCALE);
+                    const sliceH  = yEnd - yStart;
+                    if (sliceH <= 0) continue;
 
-                while (yOffset < canvasH) {
-                    // Height of this slice (last page may be shorter)
-                    const sliceH = Math.min(pageHpx, canvasH - yOffset);
-
-                    // Create a slice canvas
-                    const pageCanvas = document.createElement('canvas');
+                    // Create page canvas (always full A4 height to avoid blank space)
+                    const pageCanvas  = document.createElement('canvas');
+                    const pageHpxFull = Math.round(pageHpx * SCALE);
                     pageCanvas.width  = canvasW;
-                    pageCanvas.height = pageHpx; // always full A4 height
+                    pageCanvas.height = pageHpxFull;
                     const ctx = pageCanvas.getContext('2d');
-                    ctx.fillStyle = '#E5E5E5';
-                    ctx.fillRect(0, 0, canvasW, pageHpx);
-                    ctx.drawImage(canvas, 0, yOffset, canvasW, sliceH, 0, 0, canvasW, sliceH);
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvasW, pageHpxFull);
+                    // Draw slice at top of page
+                    ctx.drawImage(fullCanvas, 0, yStart, canvasW, sliceH, 0, 0, canvasW, sliceH);
 
-                    const sliceData = pageCanvas.toDataURL('image/jpeg', 0.92);
+                    // Scale page to PDF dimensions
+                    const sliceHmm = (sliceH / SCALE) * (pdfW / 794);
+                    const sliceData = pageCanvas.toDataURL('image/jpeg', 0.93);
 
-                    if (pageNum > 0) pdf.addPage();
+                    if (i > 0) pdf.addPage();
+                    // Place image at top, with actual content height (no stretch)
                     pdf.addImage(sliceData, 'JPEG', 0, 0, pdfW, pdfH, '', 'FAST');
-
-                    yOffset += pageHpx;
-                    pageNum++;
                 }
 
                 const fname = document.getElementById('client-name').value.replace(/\s+/g, '_');
