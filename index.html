@@ -1894,94 +1894,72 @@ loadRecordsList();
                     termsList.innerHTML += '<li>' + l + '</li>';
                 });
 
-                // ===== RENDER PDF — SMART PAGE BREAKS =====
+                // ===== RENDER PDF =====
                 const template = document.getElementById('offer-template');
 
-                // Step 1: show template in-flow (invisible) to measure correctly
+                // ── Show template for rendering ──
+                template.removeAttribute('style');
                 template.style.display   = 'block';
-                template.style.position  = 'absolute';
-                template.style.left      = '-9999px';
+                template.style.position  = 'fixed';
+                template.style.left      = '0';
                 template.style.top       = '0';
                 template.style.width     = '794px';
-                template.style.visibility = 'hidden';
+                template.style.zIndex    = '99999';
+                template.style.background = '#E5E5E5';
+                document.body.style.overflow = 'hidden';
 
-                await new Promise(res => setTimeout(res, 1200));
+                await new Promise(res => setTimeout(res, 1500));
 
                 const { jsPDF } = window.jspdf;
-                const SCALE      = 2.5;
-                const MM_PER_PX  = 210 / 794;                    // 1 template-px = X mm
-                const PAGE_H_PX  = Math.round(297 / MM_PER_PX); // ~1122px = one A4 page
-                const MARGIN_PX  = 20;
+                const SCALE     = 2;
+                const MM_PER_PX = 210 / 794;
+                const PAGE_H_PX = Math.round(297 / MM_PER_PX); // 1122px
 
-                // Step 2: measure atoms using offsetTop (works even off-screen)
-                function getOffsetTop(el, container) {
-                    let top = 0;
-                    let cur = el;
-                    while (cur && cur !== container) {
-                        top += cur.offsetTop;
-                        cur  = cur.offsetParent;
-                    }
-                    return top;
-                }
-
-                const atomSelectors = [
-                    '.ot-header',
-                    '.ot-overview',
-                    '.ot-sec-hdr',
-                    '.ot-flight',
-                    '.ot-hotel',
-                    '.ot-car',
-                    '.ot-trans-tbl',
-                    '.ot-tl-item',
-                    '.ot-cost-card',
-                    '.ot-coord',
-                    '.ot-inc-grid',
-                    '.ot-policy',
-                    '.ot-pay-grid',
-                    '.ot-bank',
-                    '.ot-terms',
-                    '.ot-footer'
+                // ── Measure atoms WHILE template is visible on screen ──
+                const ATOM_SEL = [
+                    '.ot-header','.ot-overview','.ot-sec-hdr',
+                    '.ot-flight','.ot-hotel','.ot-car',
+                    '.ot-trans-tbl','.ot-tl-item',
+                    '.ot-cost-card','.ot-coord',
+                    '.ot-inc-grid','.ot-policy',
+                    '.ot-pay-grid','.ot-bank',
+                    '.ot-terms','.ot-footer'
                 ];
 
+                const tRect = template.getBoundingClientRect();
                 const atomRects = [];
-                atomSelectors.forEach(sel => {
+                ATOM_SEL.forEach(sel => {
                     template.querySelectorAll(sel).forEach(el => {
-                        const top    = getOffsetTop(el, template);
-                        const bottom = top + el.offsetHeight;
-                        if (bottom > top) atomRects.push({ top, bottom });
+                        const r   = el.getBoundingClientRect();
+                        const top = Math.round(r.top - tRect.top);
+                        const bot = Math.round(r.bottom - tRect.top);
+                        if (bot > top + 5) atomRects.push({ top, bot });
                     });
                 });
                 atomRects.sort((a, b) => a.top - b.top);
 
                 const totalH = template.scrollHeight;
 
-                // Step 3: build cut points — cut just before any atom that would overflow
+                // ── Build cut points ──
                 const cuts = [0];
-                let pageStart = 0;
-                while (pageStart < totalH) {
-                    const pageEnd = pageStart + PAGE_H_PX - MARGIN_PX;
-                    if (pageEnd >= totalH) break;
-
-                    let cutAt = pageEnd; // default: hard cut
-
+                let ps = 0;
+                while (ps < totalH) {
+                    const pe = ps + PAGE_H_PX - 20;
+                    if (pe >= totalH) break;
+                    let cut = pe;
                     for (const a of atomRects) {
-                        if (a.top >= pageStart + PAGE_H_PX * 0.2 &&
-                            a.top <  pageEnd &&
-                            a.bottom > pageEnd) {
-                            cutAt = a.top - 4;
+                        if (a.top > ps + 60 && a.top < pe && a.bot > pe) {
+                            cut = a.top - 4;
                             break;
                         }
                     }
-
-                    if (cutAt <= pageStart + 50) cutAt = pageEnd;
-                    cuts.push(Math.round(cutAt));
-                    pageStart = Math.round(cutAt);
+                    if (cut <= ps + 40) cut = pe;
+                    cuts.push(Math.round(cut));
+                    ps = Math.round(cut);
                 }
                 cuts.push(totalH);
 
-                // Step 4: render full canvas
-                template.style.visibility = 'visible';
-
+                // ── Render full canvas ──
                 const fullCanvas = await html2canvas(template, {
                     scale: SCALE,
                     useCORS: true,
@@ -1990,41 +1968,41 @@ loadRecordsList();
                     backgroundColor: '#E5E5E5',
                     width: 794,
                     windowWidth: 794,
-                    onclone: (clonedDoc) => {
-                        const ct = clonedDoc.getElementById('offer-template');
-                        ct.style.display    = 'block';
-                        ct.style.position   = 'static';
-                        ct.style.left       = '0';
-                        ct.style.width      = '794px';
-                        ct.style.visibility = 'visible';
-                    }
+                    scrollX: 0,
+                    scrollY: 0,
+                    x: 0,
+                    y: 0
                 });
 
+                // ── Hide template ──
                 template.style.display = 'none';
+                document.body.style.overflow = '';
 
-                // Step 5: slice canvas → PDF pages (no fixed 297mm, each page = slice height)
-                const pdf  = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
+                const CW = fullCanvas.width;
+                const CH = fullCanvas.height;
+
+                // ── Build PDF ──
+                const pdf  = new jsPDF({ orientation:'p', unit:'mm', format:'a4', compress:true });
                 const pdfW = pdf.internal.pageSize.getWidth();
-                const CW   = fullCanvas.width;
 
                 for (let i = 0; i < cuts.length - 1; i++) {
-                    const y0  = Math.round(cuts[i]   * SCALE);
-                    const y1  = Math.round(cuts[i+1] * SCALE);
-                    const sh  = y1 - y0;
-                    if (sh <= 0) continue;
+                    const y0 = Math.round(cuts[i]   * SCALE);
+                    const y1 = Math.min(Math.round(cuts[i+1] * SCALE), CH);
+                    const sh = y1 - y0;
+                    if (sh <= 2) continue;
 
-                    const sliceHmm = (cuts[i+1] - cuts[i]) * MM_PER_PX;
+                    const hmm = (cuts[i+1] - cuts[i]) * MM_PER_PX;
 
                     const pc  = document.createElement('canvas');
                     pc.width  = CW;
                     pc.height = sh;
                     const ctx = pc.getContext('2d');
-                    ctx.fillStyle = '#F4F6F8';
+                    ctx.fillStyle = '#E5E5E5';
                     ctx.fillRect(0, 0, CW, sh);
                     ctx.drawImage(fullCanvas, 0, y0, CW, sh, 0, 0, CW, sh);
 
-                    if (i > 0) pdf.addPage([pdfW, sliceHmm], 'p');
-                    pdf.addImage(pc.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, pdfW, sliceHmm, '', 'FAST');
+                    if (i > 0) pdf.addPage([pdfW, hmm], 'p');
+                    pdf.addImage(pc.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pdfW, hmm, '', 'FAST');
                 }
 
                 const fname = document.getElementById('client-name').value.replace(/\s+/g, '_');
