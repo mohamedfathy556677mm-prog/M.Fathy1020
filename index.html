@@ -2180,19 +2180,20 @@ loadRecordsList();
                 // ===== RENDER PDF =====
                 const template = document.getElementById('offer-template');
 
-                // Place template off-screen — RTL safe (anchor right, hide from view)
+                // Place template off-screen using absolute positioning (not fixed)
+                // This allows html2canvas to capture full scrollHeight
+                let _pdfWrap = document.getElementById('_pdf_wrap');
+                if (!_pdfWrap) {
+                    _pdfWrap = document.createElement('div');
+                    _pdfWrap.id = '_pdf_wrap';
+                    _pdfWrap.style.cssText = 'position:absolute;top:0;left:-9999px;width:794px;overflow:visible;pointer-events:none;z-index:-1;';
+                    document.body.appendChild(_pdfWrap);
+                }
                 template.removeAttribute('style');
-                template.style.display      = 'block';
-                template.style.position     = 'fixed';
-                template.style.top          = '-9999px';
-                template.style.right        = '0';
-                template.style.left         = 'auto';
-                template.style.width        = '794px';
-                template.style.zIndex       = '99999';
-                template.style.opacity      = '0';
-                template.style.pointerEvents = 'none';
-                template.style.background   = '#E5E5E5';
-                template.style.overflow     = 'visible';
+                template.style.display    = 'block';
+                template.style.width      = '794px';
+                template.style.background = '#E5E5E5';
+                _pdfWrap.appendChild(template);
                 document.body.style.overflow = 'hidden';
 
                 await new Promise(res => setTimeout(res, 1500));
@@ -2286,34 +2287,40 @@ loadRecordsList();
                 }
                 cuts.push(totalH);
 
-                // Hide template
+                // Move template back and hide
+                document.body.appendChild(template);
                 template.style.display = 'none';
+                if (_pdfWrap && _pdfWrap.parentNode) _pdfWrap.parentNode.removeChild(_pdfWrap);
                 document.body.style.overflow = '';
 
                 // Slice canvas into PDF pages
                 const pdf  = new jsPDF({ orientation:'p', unit:'mm', format:'a4', compress:true });
                 const pdfW = pdf.internal.pageSize.getWidth();
 
+
                 for (let i = 0; i < cuts.length - 1; i++) {
-                    const y0    = Math.round(cuts[i]   * SCALE);
-                    const y1raw = Math.round(cuts[i+1] * SCALE);
-                    const y1    = Math.min(y1raw, CH);
-                    const sh    = y1 - y0;
+                    const y0 = Math.round(cuts[i] * SCALE);
+                    // Last slice: always use actual canvas bottom
+                    const y1 = (i === cuts.length - 2)
+                        ? CH
+                        : Math.min(Math.round(cuts[i+1] * SCALE), CH);
+                    const sh = y1 - y0;
                     if (sh <= 2) continue;
 
-                    // Use actual slice height for mm calculation (fixes last page cutoff)
-                    const hmm = (sh / SCALE) * MM_PER_PX;
+                    // Always use full A4 height (297mm) — prevents variable-size page issues
+                    const pageHpxFull = Math.round(PAGE_H_PX * SCALE);
 
                     const pc  = document.createElement('canvas');
                     pc.width  = CW;
-                    pc.height = sh;
+                    pc.height = pageHpxFull;   // always A4 height
                     const ctx = pc.getContext('2d');
                     ctx.fillStyle = '#E5E5E5';
-                    ctx.fillRect(0, 0, CW, sh);
+                    ctx.fillRect(0, 0, CW, pageHpxFull);
+                    // Draw content slice at top of page
                     ctx.drawImage(fullCanvas, 0, y0, CW, sh, 0, 0, CW, sh);
 
-                    if (i > 0) pdf.addPage([210, hmm]);
-                    pdf.addImage(pc.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pdfW, hmm, '', 'FAST');
+                    if (i > 0) pdf.addPage();  // standard A4
+                    pdf.addImage(pc.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pdfW, 297, '', 'FAST');
                 }
 
                 // Add real clickable links for hotels
