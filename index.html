@@ -2196,12 +2196,14 @@ loadRecordsList();
                 _pdfWrap.appendChild(template);
                 document.body.style.overflow = 'hidden';
 
-                await new Promise(res => setTimeout(res, 1500));
+                await new Promise(res => setTimeout(res, 800));
 
                 const { jsPDF } = window.jspdf;
-                const SCALE     = 2;
                 const MM_PER_PX = 210 / 794;
                 const PAGE_H_PX = Math.round(297 / MM_PER_PX); // ~1122px
+                // Scale ديناميكي: جودة عالية للعروض القصيرة، متوازنة للطويلة
+                const _docH  = template.scrollHeight;
+                const SCALE  = _docH < 4000 ? 2.5 : _docH < 7000 ? 2 : 1.8;
                 // Render full canvas
                 const fullCanvas = await html2canvas(template, {
                     scale: SCALE,
